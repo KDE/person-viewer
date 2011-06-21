@@ -1,0 +1,4 @@
+[Project]
+Name=PersonViewer
+Manager=KDevCMakeManager
+VersionControl=kdevgit
