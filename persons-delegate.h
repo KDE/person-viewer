@@ -18,32 +18,21 @@
 */
 
 
-#ifndef PERSONS_MODEL_H
-#define PERSONS_MODEL_H
+#ifndef PERSONS_DELEGATE_H
+#define PERSONS_DELEGATE_H
 
-#include <QtCore/QAbstractItemModel>
+#include <QStyledItemDelegate>
 
-namespace Nepomuk {
-class Resource;
-}
-
-class PersonsModel : public QAbstractListModel
+class PersonsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    Q_ENUMS(Role)
+
 public:
-    enum Role {
-        ItemRole = Qt::UserRole,
-        UriRole
-    };
-    PersonsModel();
-    virtual ~PersonsModel();
+    PersonsDelegate(QObject *parent = 0);
+    ~PersonsDelegate();
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-
-private:
-    QList<Nepomuk::Resource> *m_resList;
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
-#endif // PERSONS_MODEL_H
+#endif // PERSONS_DELEGATE_H

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PersonDetailsView</class>
+ <widget class="QWidget" name="PersonDetailsView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>444</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="4">
+    <widget class="QLabel" name="m_contactPicture">
+     <property name="minimumSize">
+      <size>
+       <width>132</width>
+       <height>132</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>132</width>
+       <height>132</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>contactPicture</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="m_contactName">
+     <property name="text">
+      <string>Contact Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="m_contactPresence">
+     <property name="text">
+      <string>Contact Presnce Status</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="m_contactAddress">
+     <property name="text">
+      <string>Contact Address</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="2">
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="m_contactsArea">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>411</width>
+        <height>257</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QPushButton" name="m_setPicButton">
+     <property name="text">
+      <string>Set picture..</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="m_setIMContactButton">
+     <property name="text">
+      <string>Connect to IM contact...</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

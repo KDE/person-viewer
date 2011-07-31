@@ -18,36 +18,26 @@
 */
 
 
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef PERSON_DETAILS_VIEW_H
+#define PERSON_DETAILS_VIEW_H
 
-#include <KDE/KMainWindow>
-#include <KXmlGuiWindow>
-#include <KAction>
+#include <QWidget>
 
-#include "ui_main-window.h"
+#include "ui_person-details-view.h"
 
-class PersonsDelegate;
-class PersonsModel;
-class PersonsProxyModel;
+class PersonObject;
 
-class MainWindow : public KMainWindow, Ui::MainWindow
+class PersonDetailsView : public QWidget, Ui::PersonDetailsView
 {
     Q_OBJECT
-
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    PersonDetailsView(QWidget *parent = 0);
+    virtual ~PersonDetailsView();
 
-public Q_SLOTS:
-    void showContactDetails(QModelIndex index);
-    void manageContactPicture(const QString &button);
+    void setPerson(PersonObject *person);
 
-private:
-    PersonsDelegate     *m_personsDelegate;
-    PersonsModel        *m_personsModel;
-    PersonsProxyModel   *m_personsProxyModel;
-    bool                 m_personsModified;
+Q_SIGNALS:
+    void contactPhotoOverlayClicked(const QString &button);
 };
 
-#endif // MAIN_WINDOW_H
+#endif // PERSON_DETAILS_VIEW_H

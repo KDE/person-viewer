@@ -18,36 +18,26 @@
 */
 
 
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef PHOTO_OVERLAY_BUTTONS_H
+#define PHOTO_OVERLAY_BUTTONS_H
 
-#include <KDE/KMainWindow>
-#include <KXmlGuiWindow>
-#include <KAction>
+#include <QWidget>
 
-#include "ui_main-window.h"
+class QSignalMapper;
 
-class PersonsDelegate;
-class PersonsModel;
-class PersonsProxyModel;
-
-class MainWindow : public KMainWindow, Ui::MainWindow
+class PhotoOverlayButtons : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    PhotoOverlayButtons(QWidget *parent = 0);
+    virtual ~PhotoOverlayButtons();
 
-public Q_SLOTS:
-    void showContactDetails(QModelIndex index);
-    void manageContactPicture(const QString &button);
+Q_SIGNALS:
+    void buttonsClicked(const QString &button);
 
 private:
-    PersonsDelegate     *m_personsDelegate;
-    PersonsModel        *m_personsModel;
-    PersonsProxyModel   *m_personsProxyModel;
-    bool                 m_personsModified;
+    QSignalMapper *m_signalMapper;
 };
 
-#endif // MAIN_WINDOW_H
+#endif // PHOTO_OVERLAY_BUTTONS_H

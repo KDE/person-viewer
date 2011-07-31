@@ -24,75 +24,82 @@
 
 #include <QtGui/QFormLayout>
 
+#include <KCategoryDrawer>
 #include <KDebug>
+#include <KFileDialog>
+
+#include <libperson/person-object.h>
+#include <libperson/persons-model.h>
+#include <libperson/persons-proxy-model.h>
 
 #include "main-window.h"
-#include "persons-model.h"
+#include "persons-delegate.h"
 
 
 MainWindow::MainWindow(QWidget* parent)
     : KMainWindow(parent),
-    m_personsModel(0)
+    m_personsModel(0),
+    m_personsProxyModel(0),
+    m_personsDelegate(0)
 {
     setupUi(this);
 
-    m_personsModel = new PersonsModel();
-    m_listView->setModel(m_personsModel);
+    m_personsModified = false;
 
-    connect(m_listView, SIGNAL(clicked(QModelIndex)),
+    m_personsModel = new PersonsModel(PersonsModel::AlphabetCategories, this);
+    m_personsProxyModel = new PersonsProxyModel(this);
+    m_personsProxyModel->setSourceModel(m_personsModel);
+    m_personsProxyModel->setDynamicSortFilter(true);
+    m_personsProxyModel->setCategorizedModel(true);
+
+    m_personsDelegate = new PersonsDelegate(this);
+
+    m_personsView->setModel(m_personsProxyModel);
+    m_personsView->setItemDelegate(m_personsDelegate);
+    m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
+
+    m_personsProxyModel->sort(0);
+
+    connect(m_personsView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(showContactDetails(QModelIndex)));
+
+    connect(m_personDetailsView, SIGNAL(contactPhotoOverlayClicked(QString)),
+            this, SLOT(manageContactPicture(QString)));
 }
 
 MainWindow::~MainWindow()
 {
-
+    if (m_personsModified) {
+        m_personsModel->savePersons();
+    }
 }
 
 void MainWindow::showContactDetails(QModelIndex index)
 {
-    Nepomuk::Resource r(m_personsModel->data(index, PersonsModel::UriRole).toUrl());
-    Nepomuk::Resource tag(r.property(Nepomuk::Vocabulary::PIMO::hasTag()).toResource());
+    m_personDetailsView->setPerson(index.data(PersonsModel::ItemRole).value<PersonObject*>());
+}
 
-    qDeleteAll(m_detailsFrame->children());
-
-    QFormLayout *l = new QFormLayout(m_detailsFrame);
-
-    QLabel *name = new QLabel(tag.property(Nepomuk::Vocabulary::PIMO::tagLabel()).toString(), m_detailsFrame);
-    l->addRow(name);
-
-    QStringList emails;
-    QStringList phones;
-
-    foreach(QUrl uri, r.property(Nepomuk::Vocabulary::PIMO::groundingOccurrence()).toUrlList()) {
-        Nepomuk::Resource g(uri);
-        if (g.hasProperty(Nepomuk::Vocabulary::NCO::hasEmailAddress())) {
-            Nepomuk::Resource email(g.property(Nepomuk::Vocabulary::NCO::hasEmailAddress()).toResource());
-            emails << email.property(Nepomuk::Vocabulary::NCO::emailAddress()).toStringList();
-        }
-
-        if (g.hasProperty(Nepomuk::Vocabulary::NCO::hasPhoneNumber())) {
-            Nepomuk::Resource phone(g.property(Nepomuk::Vocabulary::NCO::hasPhoneNumber()).toResource());
-            phones << phone.property(Nepomuk::Vocabulary::NCO::phoneNumber()).toStringList();
+void MainWindow::manageContactPicture(const QString &button)
+{
+    if (button == QLatin1String("change-photo")) {
+        KUrl image = KFileDialog::getImageOpenUrl(QDir::homePath(), this, i18n("Please select an image for your contact"));
+        if (image.isValid()) {
+            PersonObject *person = m_personsProxyModel->data(m_personsView->selectionModel()->currentIndex(), PersonsModel::ItemRole).value<PersonObject* >();
+            kDebug() << "Got person with name" << person->label();
+            person->setPhoto(image);
+            m_personsModified = true;
+            //this will only update the already existing person
+            m_personsModel->insertPerson(person);
+            m_personsProxyModel->sort(0);
         }
     }
-
-    kDebug() << emails << phones;
-
-    int i = 0;
-    foreach(QString email, emails) {
-        QLabel *emailStringLabel = new QLabel(i18n("Email %1:").arg(++i), this);
-        QLabel *emailLabel = new QLabel(email, m_detailsFrame);
-
-        l->addRow(emailStringLabel, emailLabel);
+    if (button == QLatin1String("remove-photo")) {
+        PersonObject *person = m_personsProxyModel->data(m_personsView->selectionModel()->currentIndex(), PersonsModel::ItemRole).value<PersonObject* >();
+        kDebug() << "Got person with name" << person->label();
+        person->removePhoto();
+        m_personsModified = true;
+        m_personsModel->insertPerson(person);
+        m_personsProxyModel->sort(0);
+        m_personDetailsView->update();
     }
-
-    i = 0;
-    foreach(QString phone, phones) {
-        QLabel *phoneStringLabel = new QLabel(i18n("Phone %1:").arg(++i), this);
-        QLabel *phoneLabel = new QLabel(phone, m_detailsFrame);
-
-        l->addRow(phoneStringLabel, phoneLabel);
-    }
-
-    m_detailsFrame->setLayout(l);
 }
