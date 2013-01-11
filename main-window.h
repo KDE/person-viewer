@@ -27,6 +27,11 @@
 
 #include "ui_main-window.h"
 
+class MergingWidget;
+class QItemSelection;
+class IMPersonsModel;
+class PIMPersonsModel;
+class PersonsProxyModel;
 class PersonsDelegate;
 class PersonsModel;
 class PersonsProxyModel;
@@ -41,13 +46,17 @@ public:
 
 public Q_SLOTS:
     void showContactDetails(QModelIndex index);
-    void manageContactPicture(const QString &button);
+
+private Q_SLOTS:
+    void onPersonModelReady();
+    void onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
     PersonsDelegate     *m_personsDelegate;
     PersonsModel        *m_personsModel;
     PersonsProxyModel   *m_personsProxyModel;
     bool                 m_personsModified;
+    QList<QModelIndex>   m_selectedContacts;
 };
 
 #endif // MAIN_WINDOW_H

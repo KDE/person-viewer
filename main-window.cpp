@@ -23,18 +23,20 @@
 #include <Nepomuk/Variant>
 
 #include <QtGui/QFormLayout>
+#include <QAbstractItemView>
 
 #include <KCategoryDrawer>
 #include <KDebug>
 #include <KFileDialog>
+#include <KCategorizedSortFilterProxyModel>
 
-#include <libperson/person-object.h>
-#include <libperson/persons-model.h>
-#include <libperson/persons-proxy-model.h>
+#include <kpeople/persons-model.h>
+#include <kpeople/persondata.h>
 
 #include "main-window.h"
 #include "persons-delegate.h"
 
+#include "persons-proxy-model.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : KMainWindow(parent),
@@ -46,7 +48,26 @@ MainWindow::MainWindow(QWidget* parent)
 
     m_personsModified = false;
 
-    m_personsModel = new PersonsModel(PersonsModel::AlphabetCategories, this);
+    m_personsModel = new PersonsModel(this);
+    connect(m_personsModel, SIGNAL(peopleAdded()),
+            this, SLOT(onPersonModelReady()));
+
+
+    connect(m_personsView, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(showContactDetails(QModelIndex)));
+
+    connect(m_personsView, SIGNAL(selectedContacts(QItemSelection,QItemSelection)),
+            this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
+
+    m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::onPersonModelReady()
+{
     m_personsProxyModel = new PersonsProxyModel(this);
     m_personsProxyModel->setSourceModel(m_personsModel);
     m_personsProxyModel->setDynamicSortFilter(true);
@@ -59,47 +80,27 @@ MainWindow::MainWindow(QWidget* parent)
     m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
 
     m_personsProxyModel->sort(0);
-
-    connect(m_personsView, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(showContactDetails(QModelIndex)));
-
-    connect(m_personDetailsView, SIGNAL(contactPhotoOverlayClicked(QString)),
-            this, SLOT(manageContactPicture(QString)));
-}
-
-MainWindow::~MainWindow()
-{
-    if (m_personsModified) {
-        m_personsModel->savePersons();
-    }
 }
 
 void MainWindow::showContactDetails(QModelIndex index)
 {
-    m_personDetailsView->setPerson(index.data(PersonsModel::ItemRole).value<PersonObject*>());
+    PersonData *person = new PersonData();
+    person->setContactUri(index.data(PersonsModel::UriRole).toUrl());
+    m_personDetailsView->setPerson(person);
+
+    kDebug() << index.data(PersonsModel::UriRole).toUrl();
+
+    connect(person, SIGNAL(dataInitialized()),
+            m_personDetailsView, SLOT(drawStuff()));
+    m_personDetailsView->setPerson(person);
 }
 
-void MainWindow::manageContactPicture(const QString &button)
+void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    if (button == QLatin1String("change-photo")) {
-        KUrl image = KFileDialog::getImageOpenUrl(QDir::homePath(), this, i18n("Please select an image for your contact"));
-        if (image.isValid()) {
-            PersonObject *person = m_personsProxyModel->data(m_personsView->selectionModel()->currentIndex(), PersonsModel::ItemRole).value<PersonObject* >();
-            kDebug() << "Got person with name" << person->label();
-            person->setPhoto(image);
-            m_personsModified = true;
-            //this will only update the already existing person
-            m_personsModel->insertPerson(person);
-            m_personsProxyModel->sort(0);
-        }
+    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
+        m_selectedContacts.append(index);
     }
-    if (button == QLatin1String("remove-photo")) {
-        PersonObject *person = m_personsProxyModel->data(m_personsView->selectionModel()->currentIndex(), PersonsModel::ItemRole).value<PersonObject* >();
-        kDebug() << "Got person with name" << person->label();
-        person->removePhoto();
-        m_personsModified = true;
-        m_personsModel->insertPerson(person);
-        m_personsProxyModel->sort(0);
-        m_personDetailsView->update();
+    Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
+        m_selectedContacts.removeAll(index);
     }
 }

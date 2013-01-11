@@ -16,7 +16,7 @@
   <widget class="QWidget" name="m_centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="KCategorizedView" name="m_personsView">
+     <widget class="PersonsListView" name="m_personsView">
       <property name="maximumSize">
        <size>
         <width>250</width>
@@ -38,41 +38,27 @@
      </widget>
     </item>
     <item>
-     <widget class="PersonDetailsView" name="m_personDetailsView" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+     <widget class="QStackedWidget" name="m_stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-      <layout class="QGridLayout" name="gridLayout"/>
+      <widget class="PersonDetailsView" name="m_personDetailsView"/>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>606</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KCategorizedView</class>
-   <extends>QListView</extends>
-   <header>kcategorizedview.h</header>
-  </customwidget>
   <customwidget>
    <class>PersonDetailsView</class>
    <extends>QWidget</extends>
    <header location="global">person-details-view.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PersonsListView</class>
+   <extends>QListView</extends>
+   <header location="global">persons-list-view.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

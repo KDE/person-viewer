@@ -22,22 +22,36 @@
 #define PERSON_DETAILS_VIEW_H
 
 #include <QWidget>
+#include <QVariantList>
 
-#include "ui_person-details-view.h"
+class QLabel;
+class PersonData;
+class QVBoxLayout;
 
-class PersonObject;
-
-class PersonDetailsView : public QWidget, Ui::PersonDetailsView
+class PersonDetailsView : public QWidget
 {
     Q_OBJECT
 public:
     PersonDetailsView(QWidget *parent = 0);
     virtual ~PersonDetailsView();
 
-    void setPerson(PersonObject *person);
+    void setPerson(PersonData *person);
 
-Q_SIGNALS:
-    void contactPhotoOverlayClicked(const QString &button);
+public Q_SLOTS:
+    void drawStuff();
+
+private:
+    QString accountTypeDisplayString(const QString &accountType) const;
+    QPixmap iconForPresence(const QString &presenceString);
+    QString findMostOnlinePresence(const QVariantList &presences) const;
+
+    PersonData *m_person;
+    QVBoxLayout *m_mainLayout;
+
+    QLabel *m_contactPixmap;
+    QLabel *m_contactNameLabel;
+    QLabel *m_contactStatusLabel;
+    QWidget *m_contactsListWidget;
 };
 
 #endif // PERSON_DETAILS_VIEW_H
