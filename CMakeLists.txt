@@ -15,7 +15,13 @@ include_directories(
   ${NEPOMUK_INCLUDE_DIR}
   )
 
-set(personviewer_SRCS photo-overlay-buttons.cpp person-details-view.cpp persons-delegate.cpp photo-overlay-event-filter.cpp
+add_subdirectory (pixmaps)
+
+set(personviewer_SRCS 
+    persons-list-view.cpp 
+    persons-proxy-model.cpp
+    person-details-view.cpp
+    persons-delegate.cpp
     filter-bar.cpp
     main-window.cpp
     main.cpp)
@@ -30,13 +36,12 @@ kde4_add_executable (person-viewer
 )
 
 target_link_libraries (person-viewer
-                       person
+                       kpeople
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
                        ${NEPOMUK_LIBRARIES}
                        ${NEPOMUK_QUERY_LIBRARIES}
                        ${SOPRANO_LIBRARIES}
-                       nepomukdatamanagement
 )
 
 install (TARGETS person-viewer
