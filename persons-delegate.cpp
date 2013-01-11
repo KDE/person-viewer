@@ -24,6 +24,7 @@
 #include <kpeople/persons-model.h>
 #include <KDebug>
 #include <KIconLoader>
+#include <KStandardDirs>
 
 #include "persons-delegate.h"
 
@@ -33,7 +34,7 @@ const int PHOTO_SIZE = 32;
 PersonsDelegate::PersonsDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
 {
-
+    m_avatarImagePath = KStandardDirs::locate("data", "person-viewer/dummy_avatar.png");
 }
 
 PersonsDelegate::~PersonsDelegate()
@@ -59,15 +60,16 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     contactPhotoRect.setWidth(PHOTO_SIZE);
     contactPhotoRect.setHeight(PHOTO_SIZE);
 
-    QPixmap avatar;
+    QImage avatar;
     QString avatarPath = index.data(PersonsModel::PhotoRole).toUrl().toLocalFile();
-    KIconLoader l;
+
     if (avatarPath.isEmpty()) {
-        avatar = l.loadIcon("dummy_avatar",KIconLoader::Desktop);
+        avatar.load(m_avatarImagePath);
     } else {
         avatar.load(avatarPath);
     }
-    painter->drawPixmap(contactPhotoRect, avatar);
+    painter->drawImage(contactPhotoRect, avatar);
+
     painter->drawRect(contactPhotoRect);
 
     QRect nameRect = optV4.rect;

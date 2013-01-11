@@ -1,1 +1,1 @@
-INSTALL (FILES dummy_avatar.png DESTINATION /usr/share/pixmaps)
+INSTALL (FILES dummy_avatar.png DESTINATION "${DATA_INSTALL_DIR}/person-viewer/")
