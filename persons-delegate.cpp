@@ -20,11 +20,15 @@
 #include <QApplication>
 #include <QPainter>
 #include <QStyle>
+#include <QUrl>
+#include <kpeople/persons-model.h>
+#include <KDebug>
+#include <KIconLoader>
 
 #include "persons-delegate.h"
 
 const int SPACING = 8;
-const int PHOTO_SIZE = 64;
+const int PHOTO_SIZE = 32;
 
 PersonsDelegate::PersonsDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
@@ -37,7 +41,7 @@ PersonsDelegate::~PersonsDelegate()
 
 }
 
-void PersonsDelegate::paint (QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItemV4 optV4 = option;
     initStyleOption(&optV4, index);
@@ -51,21 +55,35 @@ void PersonsDelegate::paint (QPainter* painter, const QStyleOptionViewItem& opti
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter);
 
     QRect contactPhotoRect = optV4.rect;
-    contactPhotoRect.adjust(SPACING, SPACING, 0, 0);
+    contactPhotoRect.adjust(SPACING, SPACING, SPACING, SPACING);
     contactPhotoRect.setWidth(PHOTO_SIZE);
     contactPhotoRect.setHeight(PHOTO_SIZE);
 
-    painter->drawPixmap(contactPhotoRect, index.data(Qt::DecorationRole).value<QPixmap>());
+    QPixmap avatar;
+    QString avatarPath = index.data(PersonsModel::PhotoRole).toUrl().toLocalFile();
+    KIconLoader l;
+    if (avatarPath.isEmpty()) {
+        avatar = l.loadIcon("dummy_avatar",KIconLoader::Desktop);
+    } else {
+        avatar.load(avatarPath);
+    }
+    painter->drawPixmap(contactPhotoRect, avatar);
+    painter->drawRect(contactPhotoRect);
 
     QRect nameRect = optV4.rect;
-    nameRect.adjust(PHOTO_SIZE + SPACING + SPACING, SPACING, 0, 0);
+    nameRect.adjust(SPACING + PHOTO_SIZE + SPACING, SPACING, 0, 0);
 
     painter->drawText(nameRect, index.data(Qt::DisplayRole).toString());
+
+    QRect mailRect = nameRect;
+    mailRect.adjust(0, nameRect.height(), 0, 0);
+
+    painter->drawText(mailRect, index.data(PersonsModel::EmailRole).toString());
 
     painter->restore();
 }
 
 QSize PersonsDelegate::sizeHint (const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    return QSize(128, 96);
+    return QSize(128, 48);
 }
