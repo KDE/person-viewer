@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Person Viewer
+GenericName=Person Viewer
+Comment=Displays your Nepomuk contacts
+Exec=person-viewer
+Type=Application
+Terminal=false
+Icon=kaddressbook
+Categories=Qt;KDE;Office;
+X-DBUS-StartupType=Unique

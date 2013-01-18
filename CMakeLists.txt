@@ -47,3 +47,7 @@ target_link_libraries (person-viewer
 install (TARGETS person-viewer
          DESTINATION ${BIN_INSTALL_DIR}
 )
+
+install (PROGRAMS person-viewer.desktop
+         DESTINATION ${XDG_APPS_INSTALL_DIR}
+)
