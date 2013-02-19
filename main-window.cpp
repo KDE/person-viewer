@@ -31,6 +31,7 @@
 
 #include <kpeople/persons-model.h>
 #include <kpeople/persondata.h>
+// #include <kpeople/persons-presence-model.h>
 
 #include "main-window.h"
 #include "persons-delegate.h"
@@ -51,6 +52,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_personsModel, SIGNAL(peopleAdded()),
             this, SLOT(onPersonModelReady()));
 
+//     m_personsPresenceModel = new PersonsPresenceModel(this);
+//     m_personsPresenceModel->setSourceModel(m_personsModel);
 
     connect(m_personsView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(showContactDetails(QModelIndex)));
@@ -83,15 +86,10 @@ void MainWindow::onPersonModelReady()
 
 void MainWindow::showContactDetails(QModelIndex index)
 {
-    PersonData *person = new PersonData();
-    person->setContactUri(index.data(PersonsModel::UriRole).toUrl());
+    PersonData *person = new PersonData(index.data(PersonsModel::UriRole).toString());
     m_personDetailsView->setPerson(person);
 
     kDebug() << index.data(PersonsModel::UriRole).toUrl();
-
-    connect(person, SIGNAL(dataInitialized()),
-            m_personDetailsView, SLOT(drawStuff()));
-    m_personDetailsView->setPerson(person);
 }
 
 void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)

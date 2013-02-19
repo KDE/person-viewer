@@ -24,6 +24,7 @@
 #include <Nepomuk/Variant>
 #include <KDebug>
 #include <KIconLoader>
+#include <KStandardDirs>
 
 #include <QVBoxLayout>
 #include <QFormLayout>
@@ -60,6 +61,9 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_mainLayout->addWidget(m_contactsListWidget);
 
     m_mainLayout->addSpacerItem(new QSpacerItem(32, 32, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+    //initialize the PresenceModel so when user selects an actual contact, we already have presences ready
+    m_person = new PersonData(QString(), this);
 }
 
 PersonDetailsView::~PersonDetailsView()
@@ -68,8 +72,15 @@ PersonDetailsView::~PersonDetailsView()
 
 void PersonDetailsView::setPerson(PersonData *person)
 {
+    disconnect(m_person, SIGNAL(dataChanged()), this, SLOT(drawStuff()));
+
+    m_person->deleteLater();
+
     m_person = person;
 
+    connect(m_person, SIGNAL(dataChanged()), this, SLOT(drawStuff()));
+
+    drawStuff();
 
 //     PersonActions* actions = new PersonActions(&m_person);
 //     actions->setPerson(&m_person);
@@ -87,15 +98,13 @@ void PersonDetailsView::drawStuff()
     QPixmap avatar;
     QString avatarPath = m_person->avatar().toLocalFile();
     if (avatarPath.isEmpty()) {
-        avatar.load("/home/mck182/Downloads/dummy-avatar.png");
+        avatar.load(KStandardDirs::locate("data", "person-viewer/dummy_avatar.png"));
     } else {
         avatar.load(avatarPath);
     }
     m_contactPixmap->setPixmap(avatar);
     m_contactNameLabel->setText(m_person->name());
-    m_contactStatusLabel->setPixmap(QPixmap());
-
-//     m_contactIdLabel->setText(m_person->contacts().join(", "));
+    m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
 
     qDeleteAll(m_contactsListWidget->children());
     m_contactsListWidget->setLayout(new QVBoxLayout(m_contactsListWidget));
@@ -103,91 +112,48 @@ void PersonDetailsView::drawStuff()
     QFont f;
     f.setPixelSize(16);
 
-    if (!m_person->personIndex().data(PersonsModel::EmailRole).isNull()) {
-        kDebug() << "Email:" << m_person->personIndex().data(PersonsModel::EmailRole);
+    if (!m_person->emails().isEmpty()) {
+        kDebug() << "Emails:" << m_person->emails();
         QLabel *title = new QLabel("Emails", m_contactsListWidget);
         title->setFont(f);
         m_contactsListWidget->layout()->addWidget(title);
 
-        if (m_person->isPerson()) {
-            QVariantList l = m_person->personIndex().data(PersonsModel::EmailRole).toList();
-            Q_FOREACH(const QVariant &v, l) {
-                QLabel *name = new QLabel(v.toString(), m_contactsListWidget);
-                name->setToolTip(v.toString());
-                m_contactsListWidget->layout()->addWidget(name);
-            }
-        } else {
-            QString c = m_person->personIndex().data(PersonsModel::EmailRole).toString();
-            QLabel *name = new QLabel(c, m_contactsListWidget);
-            name->setToolTip(c);
-            m_contactsListWidget->layout()->addWidget(name);
-//             Q_FOREACH(QAction *action, m_person->personIndex().data(PersonsModel::ContactActionsRole).value<QList<QAction*> >()) {
-//                 if (action->property("contactId").toString() == c) {
-//                     QToolButton *actionButton = new QToolButton(m_contactsListWidget);
-//                     actionButton->setIcon(action->icon());
-//                     connect(actionButton, SIGNAL(pressed()),
-//                             action, SLOT(trigger()));
-//                     m_contactsListWidget->layout()->addWidget(actionButton);
-//                 }
-//             }
+        Q_FOREACH (const QString &email, m_person->emails()) {
+            QLabel *emailLabel = new QLabel(email, m_contactsListWidget);
+            m_contactsListWidget->layout()->addWidget(emailLabel);
         }
     }
 
-    if (!m_person->personIndex().data(PersonsModel::IMRole).isNull()) {
-        kDebug() << "IM Accounts:" << m_person->personIndex().data(PersonsModel::IMRole);
+    if (!m_person->imAccounts().isEmpty()) {
+        kDebug() << "IM Accounts:" << m_person->imAccounts();
         QLabel *title = new QLabel("IM Accounts", m_contactsListWidget);
         title->setFont(f);
         m_contactsListWidget->layout()->addWidget(title);
 
-        QVariant imaccounts = m_person->personIndex().data(PersonsModel::IMRole);
-        QVariant imtypes = m_person->personIndex().data(PersonsModel::IMAccountTypeRole);
+        QStringList imAccounts = m_person->imAccounts();
 
-        if (m_person->isPerson()) {
-            QVariantList l = imtypes.toList();
-            Q_FOREACH(const QVariant &v, l) {
-                QLabel *name = new QLabel(accountTypeDisplayString(v.toString()), m_contactsListWidget);
-                name->setToolTip(v.toString());
-                m_contactsListWidget->layout()->addWidget(name);
-                m_contactStatusLabel->setPixmap(iconForPresence(findMostOnlinePresence(
-                    m_person->personIndex().data(PersonsModel::StatusRole).toList())));
-            }
-        } else {
-            QString c = imtypes.toString();
-            QString contactId = imaccounts.toString();
-            QLabel *name = new QLabel(accountTypeDisplayString(c), m_contactsListWidget);
-            name->setToolTip(c);
+        for (int i = 0; i < imAccounts.size(); i++) {
+            QLabel *name = new QLabel(accountTypeDisplayString(imAccounts.at(i++)), m_contactsListWidget);
+
+            QString imNickname = imAccounts.at(i++);
+            QString imID = imAccounts.at(i);
+
+            name->setToolTip(QString("%1 (%2)").arg(imNickname, imID));
             m_contactsListWidget->layout()->addWidget(name);
-            m_contactStatusLabel->setPixmap(iconForPresence(m_person->personIndex().data(PersonsModel::StatusRole).toString()));
-//             Q_FOREACH(QAction *action, m_person->personIndex().data(PersonsModel::ContactActionsRole).value<QList<QAction*> >()) {
-//                 if (action->property("contactId").toString() == imaccounts) {
-//                     QToolButton *actionButton = new QToolButton(m_contactsListWidget);
-//                     actionButton->setIcon(action->icon());
-//                     connect(actionButton, SIGNAL(pressed()),
-//                             action, SLOT(trigger()));
-//                     m_contactsListWidget->layout()->addWidget(actionButton);
-//                 }
-//             }
+//             m_contactStatusLabel->setPixmap(iconForPresence(findMostOnlinePresence(
+//                 m_person->personIndex().data(PersonsModel::StatusRole).toList())));
         }
     }
-    if (!m_person->personIndex().data(PersonsModel::PhoneRole).isNull()) {
-        QLabel *title = new QLabel("Phone Numbers", m_contactsListWidget);
+
+    if (!m_person->phones().isEmpty()) {
+        kDebug() << "Phones:" << m_person->phones();
+        QLabel *title = new QLabel("Phones", m_contactsListWidget);
         title->setFont(f);
         m_contactsListWidget->layout()->addWidget(title);
 
-        QVariant phoneNumbers = m_person->personIndex().data(PersonsModel::PhoneRole);
-
-        if (m_person->isPerson()) {
-            QVariantList l = phoneNumbers.toList();
-            Q_FOREACH(const QVariant &v, l) {
-                QLabel *name = new QLabel(v.toString(), m_contactsListWidget);
-                name->setToolTip(v.toString());
-                m_contactsListWidget->layout()->addWidget(name);
-            }
-        } else {
-            QString c = phoneNumbers.toString();
-            QLabel *name = new QLabel(c, m_contactsListWidget);
-            name->setToolTip(c);
-            m_contactsListWidget->layout()->addWidget(name);
+        Q_FOREACH (const QString &phone, m_person->phones()) {
+            QLabel *phoneLabel = new QLabel(phone, m_contactsListWidget);
+            m_contactsListWidget->layout()->addWidget(phoneLabel);
         }
     }
 }
