@@ -28,9 +28,6 @@
 
 class MergingWidget;
 class QItemSelection;
-class IMPersonsModel;
-class PIMPersonsModel;
-class PersonsProxyModel;
 class PersonsDelegate;
 class PersonsModel;
 class PersonsProxyModel;
@@ -51,11 +48,10 @@ private Q_SLOTS:
     void onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
-    PersonsDelegate     *m_personsDelegate;
-    PersonsModel        *m_personsModel;
-    PersonsProxyModel   *m_personsProxyModel;
-    bool                 m_personsModified;
-    QList<QModelIndex>   m_selectedContacts;
+    PersonsDelegate      *m_personsDelegate;
+    PersonsModel         *m_personsModel;
+    PersonsProxyModel    *m_personsProxyModel;
+    QList<QModelIndex>    m_selectedContacts;
 };
 
 #endif // MAIN_WINDOW_H

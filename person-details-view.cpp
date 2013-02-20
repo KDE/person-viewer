@@ -47,7 +47,6 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     QFont f;
     f.setPixelSize(18);
     m_contactNameLabel->setFont(f);
-//     m_contactIdLabel = new QLabel(this);
     m_contactStatusLabel = new QLabel(this);
 
     QHBoxLayout *namePresenceLayout = new QHBoxLayout(this);
@@ -81,16 +80,6 @@ void PersonDetailsView::setPerson(PersonData *person)
     connect(m_person, SIGNAL(dataChanged()), this, SLOT(drawStuff()));
 
     drawStuff();
-
-//     PersonActions* actions = new PersonActions(&m_person);
-//     actions->setPerson(&m_person);
-//     QToolButton* b = new QToolButton;
-//     b->setText("Actions");
-//     QMenu* m = new QMenu(b);
-//     m->addActions(actions->actions());
-//     b->setPopupMode(QToolButton::MenuButtonPopup);
-//     b->setMenu(m);
-//     l->addRow("actions:", b);
 }
 
 void PersonDetailsView::drawStuff()

@@ -16,29 +16,18 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <Nepomuk/Resource>
-#include <Nepomuk/Vocabulary/NCO>
-#include <Nepomuk/Vocabulary/PIMO>
-#include <Nepomuk/Variant>
-
-#include <QtGui/QFormLayout>
-#include <QAbstractItemView>
+#include "main-window.h"
+#include "persons-delegate.h"
+#include "persons-list-view.h"
+#include "persons-proxy-model.h"
 
 #include <KCategoryDrawer>
 #include <KDebug>
-#include <KFileDialog>
-#include <KCategorizedSortFilterProxyModel>
 
 #include <kpeople/persons-model.h>
 #include <kpeople/persondata.h>
-// #include <kpeople/persons-presence-model.h>
 
-#include "main-window.h"
-#include "persons-delegate.h"
-
-#include "persons-proxy-model.h"
-
-MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(QWidget *parent)
     : KMainWindow(parent),
     m_personsModel(0),
     m_personsProxyModel(0),
@@ -46,14 +35,9 @@ MainWindow::MainWindow(QWidget* parent)
 {
     setupUi(this);
 
-    m_personsModified = false;
-
     m_personsModel = new PersonsModel(this);
     connect(m_personsModel, SIGNAL(peopleAdded()),
             this, SLOT(onPersonModelReady()));
-
-//     m_personsPresenceModel = new PersonsPresenceModel(this);
-//     m_personsPresenceModel->setSourceModel(m_personsModel);
 
     connect(m_personsView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(showContactDetails(QModelIndex)));
