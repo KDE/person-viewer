@@ -31,7 +31,7 @@ kde4_add_ui_files (personviewer_SRCS
                    person-details-view.ui
 )
 
-kde4_add_executable (person-viewer
+kde4_add_executable (personviewer
                      ${personviewer_SRCS}
 )
 
