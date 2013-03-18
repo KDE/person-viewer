@@ -35,7 +35,7 @@ kde4_add_executable (personviewer
                      ${personviewer_SRCS}
 )
 
-target_link_libraries (person-viewer
+target_link_libraries (personviewer
                        kpeople
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
@@ -44,10 +44,10 @@ target_link_libraries (person-viewer
                        ${SOPRANO_LIBRARIES}
 )
 
-install (TARGETS person-viewer
+install (TARGETS personviewer
          DESTINATION ${BIN_INSTALL_DIR}
 )
 
-install (PROGRAMS person-viewer.desktop
+install (PROGRAMS personviewer.desktop
          DESTINATION ${XDG_APPS_INSTALL_DIR}
 )
