@@ -86,10 +86,12 @@ void PersonDetailsView::drawStuff()
 {
     QPixmap avatar;
     QString avatarPath = m_person->avatar().toLocalFile();
-    if (avatarPath.isEmpty()) {
-        avatar.load(KStandardDirs::locate("data", "person-viewer/dummy_avatar.png"));
-    } else {
+    if (!avatarPath.isEmpty()) {
         avatar.load(avatarPath);
+    }
+
+    if (avatar.isNull()) {
+        avatar.load(KStandardDirs::locate("data", "person-viewer/dummy_avatar.png"));
     }
     m_contactPixmap->setPixmap(avatar);
     m_contactNameLabel->setText(m_person->name());

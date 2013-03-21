@@ -60,13 +60,16 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     contactPhotoRect.setHeight(PHOTO_SIZE);
 
     QImage avatar;
-    QString avatarPath = index.data(PersonsModel::PhotoRole).toUrl().toLocalFile();
+    QVariantList avatarList = index.data(PersonsModel::PhotoRole).toList();
 
-    if (avatarPath.isEmpty()) {
-        avatar.load(m_avatarImagePath);
-    } else {
-        avatar.load(avatarPath);
+    if (!avatarList.isEmpty()) {
+        avatar.load(avatarList.first().toUrl().toLocalFile());
     }
+
+    if (avatar.isNull()) {
+        avatar.load(m_avatarImagePath);
+    }
+
     painter->drawImage(contactPhotoRect, avatar);
 
     painter->drawRect(contactPhotoRect);
