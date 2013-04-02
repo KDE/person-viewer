@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
 
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 MainWindow::~MainWindow()
