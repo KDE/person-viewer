@@ -30,11 +30,6 @@ public:
     PersonsListView(QWidget *parent = 0);
     virtual ~PersonsListView();
 
-Q_SIGNALS:
-    void selectedContacts(const QItemSelection &selected, const QItemSelection &deselected);
-
-protected Q_SLOTS:
-    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 };
 
 #endif // PERSONS_LIST_VIEW_H

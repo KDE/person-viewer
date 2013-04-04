@@ -31,6 +31,7 @@ class QItemSelection;
 class PersonsDelegate;
 class PersonsModel;
 class PersonsProxyModel;
+class PersonDetailsView;
 
 class MainWindow : public KMainWindow, Ui::MainWindow
 {
@@ -41,7 +42,7 @@ public:
     ~MainWindow();
 
 public Q_SLOTS:
-    void showContactDetails(QModelIndex index);
+//     void showContactDetails(QModelIndex index);
 
 private Q_SLOTS:
     void onPersonModelReady();
@@ -51,7 +52,7 @@ private:
     PersonsDelegate      *m_personsDelegate;
     PersonsModel         *m_personsModel;
     PersonsProxyModel    *m_personsProxyModel;
-    QList<QModelIndex>    m_selectedContacts;
+    QHash<QString, PersonDetailsView*> m_cachedDetails;
 };
 
 #endif // MAIN_WINDOW_H

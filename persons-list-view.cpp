@@ -27,8 +27,3 @@ PersonsListView::PersonsListView(QWidget *parent)
 PersonsListView::~PersonsListView()
 {
 }
-
-void PersonsListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
-{
-    emit selectedContacts(selected, deselected);
-}

@@ -20,6 +20,9 @@
 #include "persons-delegate.h"
 #include "persons-list-view.h"
 #include "persons-proxy-model.h"
+#include "person-details-view.h"
+
+#include <QLayout>
 
 #include <KCategoryDrawer>
 #include <KDebug>
@@ -35,18 +38,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi(this);
 
-    m_personsModel = new PersonsModel(this);
+    m_personsModel = new PersonsModel(0, PersonsModel::FeatureEmails | PersonsModel::FeatureAvatars | PersonsModel::FeatureIM, this);
     connect(m_personsModel, SIGNAL(peopleAdded()),
             this, SLOT(onPersonModelReady()));
 
-    connect(m_personsView, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(showContactDetails(QModelIndex)));
-
-    connect(m_personsView, SIGNAL(selectedContacts(QItemSelection,QItemSelection)),
-            this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
-
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    m_personsDetailsView->setLayout(new QVBoxLayout());
 }
 
 MainWindow::~MainWindow()
@@ -67,22 +66,42 @@ void MainWindow::onPersonModelReady()
     m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
 
     m_personsProxyModel->sort(0);
+
+    connect(m_personsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
+
 }
 
-void MainWindow::showContactDetails(QModelIndex index)
-{
-    PersonData *person = new PersonData(index.data(PersonsModel::UriRole).toString());
-    m_personDetailsView->setPerson(person);
-
-    kDebug() << index.data(PersonsModel::UriRole).toUrl();
-}
 
 void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
-        m_selectedContacts.append(index);
+
+    if (m_personsView->selectionModel()->selectedIndexes().size() < 2) {
+        m_mergeButton->setVisible(false);
+    } else {
+        m_mergeButton->setVisible(true);
     }
+    QString uri;
+
+    //add all new contacts
+    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
+        uri = index.data(PersonsModel::UriRole).toString();
+        PersonDetailsView *details = m_cachedDetails.value(uri);
+        if (!details) {
+            details = new PersonDetailsView();
+            details->setPerson(new PersonData(uri, details));
+            m_cachedDetails.insert(uri, details);
+        }
+        qDebug() << "adding" << uri;
+        m_personsDetailsView->layout()->addWidget(details);
+    }
+
     Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
-        m_selectedContacts.removeAll(index);
+        uri = index.data(PersonsModel::UriRole).toString();
+        if (m_cachedDetails.contains(uri)) {
+            m_cachedDetails[uri]->deleteLater();
+            m_cachedDetails.remove(uri);
+        }
+        qDebug() << "removing" << uri;
     }
 }

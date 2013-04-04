@@ -38,23 +38,43 @@
      </widget>
     </item>
     <item>
-     <widget class="QStackedWidget" name="m_stackedWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="PersonDetailsView" name="m_personDetailsView"/>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPushButton" name="m_mergeButton">
+        <property name="text">
+         <string>Merge Contacts</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="m_personsDetailsView">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>336</width>
+           <height>539</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>PersonDetailsView</class>
-   <extends>QWidget</extends>
-   <header location="global">person-details-view.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>PersonsListView</class>
    <extends>QListView</extends>
