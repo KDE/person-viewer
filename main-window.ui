@@ -17,6 +17,12 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="PersonsListView" name="m_personsView">
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>250</width>
