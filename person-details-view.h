@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QVariantList>
 
+class FacebookConnector;
 class QLabel;
 class PersonData;
 class QVBoxLayout;
@@ -42,15 +43,16 @@ public Q_SLOTS:
 private:
     QString accountTypeDisplayString(const QString &accountType) const;
     QPixmap iconForPresence(const QString &presenceString);
-    QString findMostOnlinePresence(const QVariantList &presences) const;
 
     PersonData *m_person;
     QVBoxLayout *m_mainLayout;
 
     QLabel *m_contactPixmap;
     QLabel *m_contactNameLabel;
+    QLabel *m_contactBirthdayLabel;
     QLabel *m_contactStatusLabel;
     QWidget *m_contactsListWidget;
+    FacebookConnector *m_facebookPostWidget;
 };
 
 #endif // PERSON_DETAILS_VIEW_H

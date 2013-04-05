@@ -18,6 +18,7 @@
 
 
 #include "person-details-view.h"
+#include "facebook-connector.h"
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Vocabulary/NCO>
@@ -25,6 +26,7 @@
 #include <KDebug>
 #include <KIconLoader>
 #include <KStandardDirs>
+#include <KIcon>
 
 #include <QVBoxLayout>
 #include <QFormLayout>
@@ -48,16 +50,30 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     f.setPixelSize(18);
     m_contactNameLabel->setFont(f);
     m_contactStatusLabel = new QLabel(this);
+    m_contactBirthdayLabel = new QLabel(this);
 
-    QHBoxLayout *namePresenceLayout = new QHBoxLayout(this);
-    namePresenceLayout->addWidget(m_contactNameLabel);
-    namePresenceLayout->addWidget(m_contactStatusLabel);
+    QGridLayout *namePresenceLayout = new QGridLayout(this);
+    namePresenceLayout->addWidget(m_contactPixmap, 0, 0, 2, 1);
+    namePresenceLayout->addWidget(m_contactNameLabel, 0, 1);
+    namePresenceLayout->addWidget(m_contactStatusLabel, 0, 2);
+    namePresenceLayout->addWidget(m_contactBirthdayLabel, 1, 1);
+    namePresenceLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding), 0, 3);
+
+    QFrame *line = new QFrame(this);
+    line->setFrameShape(QFrame::HLine);
+
+    namePresenceLayout->addWidget(line, 2, 0, 1, 4);
 
     m_contactsListWidget = new QWidget(this);
 
-    m_mainLayout->addWidget(m_contactPixmap);
+//     m_mainLayout->addWidget(m_contactPixmap);
     m_mainLayout->addLayout(namePresenceLayout);
     m_mainLayout->addWidget(m_contactsListWidget);
+
+    m_facebookPostWidget = new FacebookConnector(this);
+
+    m_mainLayout->addWidget(m_facebookPostWidget);
+    m_facebookPostWidget->hide();
 
     m_mainLayout->addSpacerItem(new QSpacerItem(32, 32, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
@@ -84,6 +100,7 @@ void PersonDetailsView::setPerson(PersonData *person)
 
 void PersonDetailsView::drawStuff()
 {
+    kDebug();
     QPixmap avatar;
     QString avatarPath = m_person->avatar().toLocalFile();
     if (!avatarPath.isEmpty()) {
@@ -93,44 +110,73 @@ void PersonDetailsView::drawStuff()
     if (avatar.isNull()) {
         avatar.load(KStandardDirs::locate("data", "person-viewer/dummy_avatar.png"));
     }
-    m_contactPixmap->setPixmap(avatar);
+    m_contactPixmap->setPixmap(avatar.scaled(96, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
+    m_contactBirthdayLabel->setText(m_person->birthday().date().toString());
 
     qDeleteAll(m_contactsListWidget->children());
-    m_contactsListWidget->setLayout(new QVBoxLayout(m_contactsListWidget));
+    QGridLayout *layout = new QGridLayout(m_contactsListWidget);
+    layout->setColumnMinimumWidth(0, 22);
+
+    m_contactsListWidget->setLayout(layout);
+    m_facebookPostWidget->clear();
+    m_facebookPostWidget->hide();
 
     QFont f;
     f.setPixelSize(16);
 
     if (!m_person->emails().isEmpty()) {
         kDebug() << "Emails:" << m_person->emails();
+        QLabel *icon = new QLabel(this);
+        icon->setPixmap(KIcon("mail-message").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
         QLabel *title = new QLabel("Emails", m_contactsListWidget);
         title->setFont(f);
-        m_contactsListWidget->layout()->addWidget(title);
+        int row = layout->rowCount();
+        layout->addWidget(icon, row, 0);
+        layout->addWidget(title, row, 1);
+//         layout->addWidget(title, );
 
         Q_FOREACH (const QString &email, m_person->emails()) {
             QLabel *emailLabel = new QLabel(email, m_contactsListWidget);
-            m_contactsListWidget->layout()->addWidget(emailLabel);
+            layout->addWidget(emailLabel, ++row, 1);
         }
     }
 
     if (!m_person->imAccounts().isEmpty()) {
         kDebug() << "IM Accounts:" << m_person->imAccounts();
+        QLabel *icon = new QLabel(this);
+        icon->setPixmap(KIcon("telepathy-kde").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
         QLabel *title = new QLabel("IM Accounts", m_contactsListWidget);
         title->setFont(f);
-        m_contactsListWidget->layout()->addWidget(title);
+        int row = layout->rowCount();
+        layout->addWidget(icon, row, 0);
+        layout->addWidget(title, row, 1);
+//         m_contactsListWidget->layout()->addWidget(title);
 
         QStringList imAccounts = m_person->imAccounts();
 
         for (int i = 0; i < imAccounts.size(); i++) {
+            bool facebookAccount = false;
+            if (imAccounts.at(i) == "facebook") {
+                facebookAccount = true;
+            }
+
             QLabel *name = new QLabel(accountTypeDisplayString(imAccounts.at(i++)), m_contactsListWidget);
 
             QString imNickname = imAccounts.at(i++);
             QString imID = imAccounts.at(i);
 
+            if (facebookAccount) {
+                //@chat.facebook.com
+                kDebug() << imID << imID.mid(1, imID.length() - 19);
+                m_facebookPostWidget->setUserId(imID.mid(1, imID.length() - 19));
+                m_facebookPostWidget->show();
+            }
+
             name->setToolTip(QString("%1 (%2)").arg(imNickname, imID));
-            m_contactsListWidget->layout()->addWidget(name);
+            layout->addWidget(name, ++row, 1);
+//             m_contactsListWidget->layout()->addWidget(name);
 //             m_contactStatusLabel->setPixmap(iconForPresence(findMostOnlinePresence(
 //                 m_person->personIndex().data(PersonsModel::StatusRole).toList())));
         }
@@ -138,15 +184,29 @@ void PersonDetailsView::drawStuff()
 
     if (!m_person->phones().isEmpty()) {
         kDebug() << "Phones:" << m_person->phones();
+        QLabel *icon = new QLabel(this);
+        icon->setPixmap(KIcon("phone").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
         QLabel *title = new QLabel("Phones", m_contactsListWidget);
         title->setFont(f);
-        m_contactsListWidget->layout()->addWidget(title);
+        int row = layout->rowCount();
+        layout->addWidget(icon, row, 0);
+        layout->addWidget(title, row, 1);
 
         Q_FOREACH (const QString &phone, m_person->phones()) {
             QLabel *phoneLabel = new QLabel(phone, m_contactsListWidget);
-            m_contactsListWidget->layout()->addWidget(phoneLabel);
+            layout->addWidget(phoneLabel, ++row, 1);
         }
     }
+
+    if (!m_person->contactUID().isEmpty()) {
+        m_facebookPostWidget->setUserId(m_person->contactUID());
+        m_facebookPostWidget->show();
+    }
+
+    kDebug() << m_person->birthday().date().toString();
+
+    layout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
+
 }
 
 QString PersonDetailsView::accountTypeDisplayString(const QString &accountType) const
@@ -196,22 +256,4 @@ QPixmap PersonDetailsView::iconForPresence(const QString &presenceString)
     }
 
     return QPixmap();
-}
-
-QString PersonDetailsView::findMostOnlinePresence(const QVariantList &presences) const
-{
-    if (presences.contains("available")) {
-        return "available";
-    }
-    if (presences.contains("away")) {
-        return "away";
-    }
-    if (presences.contains("busy") || presences.contains("dnd")) {
-        return "busy";
-    }
-    if (presences.contains("xa")) {
-        return "xa";
-    }
-
-    return "offline";
 }

@@ -3,6 +3,11 @@ project(personviewer)
 set(KDE_MIN_VERSION "4.6.75")
 find_package (KDE4 4.6.75 REQUIRED)
 find_package(Nepomuk REQUIRED)
+find_package(LibKFbAPI 1.0 QUIET CONFIG)
+set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
+                                            URL "http://projects.kde.org/libkfbapi"
+                                            TYPE OPTIONAL
+                                            PURPOSE "LibKFbAPI is required to build Akonadi resources to access Facebook's contacts, events, notes and posts" )
 
 include (KDE4Defaults)
 include (MacroLibrary)
@@ -13,11 +18,12 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}
   ${NEPOMUK_INCLUDE_DIR}
+  ${LibKFbAPI_INCLUDE_DIR}
   )
 
 add_subdirectory (pixmaps)
 
-set(personviewer_SRCS 
+set(personviewer_SRCS facebook-connector.cpp
     persons-list-view.cpp 
     persons-proxy-model.cpp
     person-details-view.cpp
@@ -42,6 +48,7 @@ target_link_libraries (personviewer
                        ${NEPOMUK_LIBRARIES}
                        ${NEPOMUK_QUERY_LIBRARIES}
                        ${SOPRANO_LIBRARIES}
+                       ${LibKFbAPI_LIBRARY}
 )
 
 install (TARGETS personviewer
