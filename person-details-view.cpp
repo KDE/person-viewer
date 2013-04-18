@@ -113,7 +113,7 @@ void PersonDetailsView::drawStuff()
     m_contactPixmap->setPixmap(avatar.scaled(96, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
-    m_contactBirthdayLabel->setText(m_person->birthday().date().toString());
+//     m_contactBirthdayLabel->setText(m_person->birthday().date().toString());
 
     qDeleteAll(m_contactsListWidget->children());
     QGridLayout *layout = new QGridLayout(m_contactsListWidget);
@@ -198,12 +198,12 @@ void PersonDetailsView::drawStuff()
         }
     }
 
-    if (!m_person->contactUID().isEmpty()) {
-        m_facebookPostWidget->setUserId(m_person->contactUID());
-        m_facebookPostWidget->show();
-    }
-
-    kDebug() << m_person->birthday().date().toString();
+//     if (!m_person->contactUID().isEmpty()) {
+//         m_facebookPostWidget->setUserId(m_person->contactUID());
+//         m_facebookPostWidget->show();
+//     }
+//
+//     kDebug() << m_person->birthday().date().toString();
 
     layout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
 
