@@ -38,7 +38,6 @@
 FacebookConnector::FacebookConnector(QWidget *parent)
     : QWidget(parent)
 {
-    //"BAACfYf7SVkIBAIqZCqQQ9FKBcQziJnJXcg88ftQFSZBJuLbwyFpn4QaEMWFo4ZCxrtzGJZCB0r1Pr3Bc3JDWPbIsJNZCNZCOKOxMBnJzAWU419pVlwZAlKZC"
     KStandardDirs sd;
     QDir d(sd.saveLocation("config"));
 
