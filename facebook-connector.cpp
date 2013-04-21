@@ -38,18 +38,19 @@
 FacebookConnector::FacebookConnector(QWidget *parent)
     : QWidget(parent)
 {
-    KStandardDirs sd;
-    QDir d(sd.saveLocation("config"));
+    QDir d(KGlobal::dirs()->saveLocation("config", QString(), false));
 
-    KConfig akonadiFacebookConfig(d.entryList(QStringList() << "akonadi_facebook_resource*", QDir::Files).last());
-    KConfigGroup afGroup = akonadiFacebookConfig.group("Authentication");
+    QStringList akonadiFacebookConfigFileNames = d.entryList(QStringList() << "akonadi_facebook_resource*", QDir::Files);
+    if (! akonadiFacebookConfigFileNames.isEmpty()) {
+        KConfig akonadiFacebookConfig(d.entryList(QStringList() << "akonadi_facebook_resource*", QDir::Files).last());
+        KConfigGroup afGroup = akonadiFacebookConfig.group("Authentication");
 
-    m_accessToken = afGroup.readEntry("AccessToken");
-
+        m_accessToken = afGroup.readEntry("AccessToken");
+    }
     QGridLayout *mainLayout = new QGridLayout(this);
     setLayout(mainLayout);
-//     mainLayout->setColumnStretch(0, 1);
-//     mainLayout->setColumnStretch(1, 2);
+    //     mainLayout->setColumnStretch(0, 1);
+    //     mainLayout->setColumnStretch(1, 2);
     mainLayout->setColumnMinimumWidth(0, 22);
 
     QLabel *facebookIcon = new QLabel(this);
@@ -57,8 +58,8 @@ FacebookConnector::FacebookConnector(QWidget *parent)
 
     mainLayout->addWidget(facebookIcon, 1, 0);
 
-//     QVBoxLayout *layout = new QVBoxLayout(this);
-//     mainLayout->addLayout(layout);
+    //     QVBoxLayout *layout = new QVBoxLayout(this);
+    //     mainLayout->addLayout(layout);
 
     QFont f;
     f.setPixelSize(18);
@@ -93,17 +94,13 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     mainLayout->addWidget(m_post, 3, 1);
     mainLayout->addWidget(m_profileLink, 4, 1);
     mainLayout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
-
-
-//     layout->addWidget(line);
-//     layout->addWidget(m_title);
-//     layout->addWidget(lastPostTitle);
-//     layout->addWidget(m_post);
-//     layout->addWidget(m_busyWidget);
 }
 
 void FacebookConnector::setUserId(const QString &userId)
 {
+    if (m_accessToken.isEmpty()) {
+        return;
+    }
     if (userId == m_userId) {
         return;
     }
