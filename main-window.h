@@ -47,6 +47,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void onPersonModelReady();
     void onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void onMergeButtonPressed();
 
 private:
     PersonsDelegate      *m_personsDelegate;

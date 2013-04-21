@@ -70,6 +70,7 @@ void MainWindow::onPersonModelReady()
     connect(m_personsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
 
+    connect(m_mergeButton, SIGNAL(pressed()), SLOT(onMergeButtonPressed()));
 }
 
 
@@ -104,4 +105,14 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
         }
         qDebug() << "removing" << uri;
     }
+}
+
+void MainWindow::onMergeButtonPressed()
+{
+    QList<QUrl> contactUrlsToMerge;
+    Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
+        contactUrlsToMerge << index.data(PersonsModel::UriRole).toString();
+    }
+    kDebug() << "merging " << contactUrlsToMerge;
+    m_personsModel->merge(contactUrlsToMerge);
 }
