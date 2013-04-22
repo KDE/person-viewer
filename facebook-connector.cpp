@@ -133,6 +133,9 @@ void FacebookConnector::lastPostFetched(KJob *job)
         m_lastPostTitle->setText(i18n("Authentication problem"));
         m_post->setText(i18n("Cannot authenticate with your access token"));
         return;
+    } else if (postsJob->error() == KJob::UserDefinedError) {
+        m_lastPostTitle->setText(i18n("There was an error"));
+        m_post->setText(postsJob->errorText());
     }
 
     QString userId = postsJob->property("userId").toString();
