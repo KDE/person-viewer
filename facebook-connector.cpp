@@ -129,6 +129,12 @@ void FacebookConnector::lastPostFetched(KJob *job)
     m_busyWidget->hide();
     KFbAPI::PostsListJob *postsJob = qobject_cast<KFbAPI::PostsListJob*>(job);
 
+    if (postsJob->error() == KFbAPI::FacebookJob::AuthenticationProblem) {
+        m_lastPostTitle->setText(i18n("Authentication problem"));
+        m_post->setText(i18n("Cannot authenticate with your access token"));
+        return;
+    }
+
     QString userId = postsJob->property("userId").toString();
     QString postMessage;
     QString postDate;
