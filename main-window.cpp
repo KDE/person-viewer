@@ -112,10 +112,5 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
 void MainWindow::onMergeButtonPressed()
 {
-    QList<QUrl> contactUrlsToMerge;
-    Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
-        contactUrlsToMerge << index.data(PersonsModel::UriRole).toString();
-    }
-    kDebug() << "merging " << contactUrlsToMerge;
-    m_personsModel->merge(contactUrlsToMerge);
+    m_personsModel->createPersonFromIndexes(m_personsView->selectionModel()->selectedIndexes());
 }
