@@ -89,9 +89,13 @@ void FacebookConnector::setPerson(PersonData *person)
 
     //also search IM accounts for anything Facebook related
     QStringList imAccounts = person->imAccounts();
-    for (int i=0;i<imAccounts.size();i+=3) {
+    for (int i = 0; i < imAccounts.size(); i += 3) {
         if (imAccounts[i] == "facebook") {
-            userId = imAccounts[i+1];
+            //the facebook id from telepathy looks like this
+            // -1581495501@chat.facebook.com
+            //so we need to remove the "-" at the beginning
+            //and everything after "@", which is 19 chars
+            userId = imAccounts[i+2].mid(1, imAccounts[i+2].length() - 19);
         }
     }
 
