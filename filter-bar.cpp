@@ -32,20 +32,21 @@
 FilterBar::FilterBar(QWidget* parent) :
     QWidget(parent)
 {
-    // Create close button
-    QToolButton *closeButton = new QToolButton(this);
-    closeButton->setAutoRaise(true);
-    closeButton->setIcon(KIcon("dialog-close"));
-    closeButton->setToolTip(i18nc("@info:tooltip", "Hide Filter Bar"));
-    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeRequest()));
+//     // Create close button
+//     QToolButton *closeButton = new QToolButton(this);
+//     closeButton->setAutoRaise(true);
+//     closeButton->setIcon(KIcon("dialog-close"));
+//     closeButton->setToolTip(i18nc("@info:tooltip", "Hide Filter Bar"));
+//     connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeRequest()));
 
     // Create label
-    QLabel* filterLabel = new QLabel(i18nc("@label:textbox", "Filter:"), this);
+//     QLabel* filterLabel = new QLabel(i18nc("@label:textbox", "Filter:"), this);
 
     // Create filter editor
     m_filterInput = new KLineEdit(this);
     m_filterInput->setLayoutDirection(Qt::LeftToRight);
     m_filterInput->setClearButtonShown(true);
+    m_filterInput->setClickMessage(i18n("Search contacts..."));
     connect(m_filterInput, SIGNAL(textChanged(const QString&)),
             this, SIGNAL(filterChanged(const QString&)));
     setFocusProxy(m_filterInput);
@@ -53,11 +54,11 @@ FilterBar::FilterBar(QWidget* parent) :
     // Apply layout
     QHBoxLayout* hLayout = new QHBoxLayout(this);
     hLayout->setMargin(0);
-    hLayout->addWidget(closeButton);
-    hLayout->addWidget(filterLabel);
+//     hLayout->addWidget(closeButton);
+//     hLayout->addWidget(filterLabel);
     hLayout->addWidget(m_filterInput);
 
-    filterLabel->setBuddy(m_filterInput);
+//     filterLabel->setBuddy(m_filterInput);
 }
 
 FilterBar::~FilterBar()

@@ -60,6 +60,7 @@ void MainWindow::onPersonModelReady()
     m_personsProxyModel = new PersonsProxyModel(this);
     m_personsProxyModel->setSourceModel(m_personsModel);
     m_personsProxyModel->setDynamicSortFilter(true);
+    m_personsProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_personsProxyModel->setCategorizedModel(true);
 
     m_personsDelegate = new PersonsDelegate(this);
@@ -74,6 +75,9 @@ void MainWindow::onPersonModelReady()
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
 
     connect(m_mergeButton, SIGNAL(pressed()), SLOT(onMergeButtonPressed()));
+
+    connect(m_filterBar, SIGNAL(filterChanged(QString)),
+            m_personsProxyModel, SLOT(setFilterFixedString(QString)));
 }
 
 

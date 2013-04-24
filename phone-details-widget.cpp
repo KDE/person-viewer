@@ -1,5 +1,4 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
     Copyright (C) 2013  David Edmundson <D.Edmundson@lboro.ac.uk>
 
     This program is free software: you can redistribute it and/or modify
@@ -32,7 +31,7 @@ PhoneDetailsWidget::PhoneDetailsWidget(QWidget *parent):
     AbstractPersonDetailsWidget(parent)
 {
     setTitle(i18n("Phone"));
-    setIcon(KIcon("mail-message"));
+    setIcon(KIcon("phone"));
 }
 
 void PhoneDetailsWidget::setPerson(PersonData* person)
