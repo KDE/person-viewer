@@ -53,7 +53,7 @@ DetailsGroupWidget::DetailsGroupWidget(AbstractPersonDetailsWidget* detailsWidge
     QWidget(parent)
 {
     QGridLayout *layout = new QGridLayout(this);
-    layout->setColumnStretch(1, 1); //THIS IS A HACK!
+    layout->setColumnStretch(1, 1);
 
     QLabel *iconLabel = new QLabel(this);
     QLabel *titleLabel = new QLabel(this);
@@ -70,13 +70,11 @@ DetailsGroupWidget::DetailsGroupWidget(AbstractPersonDetailsWidget* detailsWidge
     titleLabel->setText(detailsWidget->title());
     iconLabel->setPixmap(detailsWidget->icon().pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
 
-//     setVisible(detailsWidget->isVisible());
-    connect(detailsWidget, SIGNAL(visibilityChanged(bool)), SLOT(setVisible(bool)));
+    setVisible(detailsWidget->active());
+    connect(detailsWidget, SIGNAL(activeChanged(bool)), SLOT(setVisible(bool)));
 
     setLayout(layout);
 }
-
-
 
 PersonDetailsView::PersonDetailsView(QWidget *parent)
     : QWidget(parent)
@@ -104,7 +102,6 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
 
     m_contactsListWidget = new QWidget(this);
 
-//     m_mainLayout->addWidget(m_contactPixmap);
     m_mainLayout->addLayout(namePresenceLayout);
     m_mainLayout->addWidget(m_contactsListWidget);
 
@@ -115,6 +112,8 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_imDetailsWidget = new IMDetailsWidget(this);
     m_mainLayout->addWidget(new DetailsGroupWidget(m_imDetailsWidget, this));
 
+    m_phoneDetailsWidget = new EmailDetailsWidget(this);
+    m_mainLayout->addWidget(new DetailsGroupWidget(m_phoneDetailsWidget, this));
 
     m_facebookPostWidget = new FacebookConnector(this);
 
@@ -161,7 +160,6 @@ void PersonDetailsView::drawStuff()
     m_contactPixmap->setPixmap(avatar.scaled(96, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
-//     m_contactBirthdayLabel->setText(m_person->birthday().date().toString());
 
     qDeleteAll(m_contactsListWidget->children());
     QGridLayout *layout = new QGridLayout(m_contactsListWidget);
@@ -173,40 +171,13 @@ void PersonDetailsView::drawStuff()
 
     m_emailDetailsWidget->setPerson(m_person);
     m_imDetailsWidget->setPerson(m_person);
-
-
-//     QLabel *icon = new QLabel(this);
-//     icon->setPixmap(KIcon("telepathy-kde").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
-//     QLabel *title = new QLabel("IM Accounts", m_contactsListWidget);
-//     title->setFont(f);
-//     int row = layout->rowCount();
-//     layout->addWidget(icon, row, 0);
-//     layout->addWidget(title, row, 1);
-
-
-
-//     if (!m_person->phones().isEmpty()) {
-//         kDebug() << "Phones:" << m_person->phones();
-//         QLabel *icon = new QLabel(this);
-//         icon->setPixmap(KIcon("phone").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
-//         QLabel *title = new QLabel("Phones", m_contactsListWidget);
-//         title->setFont(f);
-//         int row = layout->rowCount();
-//         layout->addWidget(icon, row, 0);
-//         layout->addWidget(title, row, 1);
-//
-//         Q_FOREACH (const QString &phone, m_person->phones()) {
-//             QLabel *phoneLabel = new QLabel(phone, m_contactsListWidget);
-//             layout->addWidget(phoneLabel, ++row, 1);
-//         }
-//     }
+    m_phoneDetailsWidget->setPerson(m_person);
 
 //     if (!m_person->contactUID().isEmpty()) {
 //         m_facebookPostWidget->setUserId(m_person->contactUID());
 //         m_facebookPostWidget->show();
 //     }
-//
-//     kDebug() << m_person->birthday().date().toString();
+
 
     layout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
 

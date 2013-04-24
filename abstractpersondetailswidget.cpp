@@ -19,17 +19,22 @@
 
 #include "abstractpersondetailswidget.h"
 
+#include <KDebug>
+
 class AbstractPersonDetailsWidgetPrivate
 {
 public:
     QString title;
     KIcon icon;
+    bool active;
 };
 
 AbstractPersonDetailsWidget::AbstractPersonDetailsWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new AbstractPersonDetailsWidgetPrivate())
 {
+    Q_D(AbstractPersonDetailsWidget);
+    d->active = true;
 }
 
 AbstractPersonDetailsWidget::~AbstractPersonDetailsWidget()
@@ -49,8 +54,6 @@ KIcon AbstractPersonDetailsWidget::icon() const
     return d->icon;
 }
 
-
-
 void AbstractPersonDetailsWidget::setTitle(const QString& title)
 {
     Q_D(AbstractPersonDetailsWidget);
@@ -61,4 +64,17 @@ QString AbstractPersonDetailsWidget::title() const
 {
     Q_D(const AbstractPersonDetailsWidget);
     return d->title;
+}
+
+void AbstractPersonDetailsWidget::setActive(bool active)
+{
+    Q_D(AbstractPersonDetailsWidget);
+    d->active = active;
+    emit activeChanged(active);
+}
+
+bool AbstractPersonDetailsWidget::active() const
+{
+    Q_D(const AbstractPersonDetailsWidget);
+    return d->active;
 }
