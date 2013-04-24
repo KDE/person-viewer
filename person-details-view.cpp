@@ -18,7 +18,6 @@
 
 
 #include "person-details-view.h"
-#include "facebook-connector.h"
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Vocabulary/NCO>
@@ -40,6 +39,8 @@
 
 #include "email-details-widget.h"
 #include "im-details-widget.h"
+#include "facebook-connector.h"
+#include "phone-details-widget.h"
 
 using namespace Nepomuk::Vocabulary;
 
@@ -112,7 +113,7 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_imDetailsWidget = new IMDetailsWidget(this);
     m_mainLayout->addWidget(new DetailsGroupWidget(m_imDetailsWidget, this));
 
-    m_phoneDetailsWidget = new EmailDetailsWidget(this);
+    m_phoneDetailsWidget = new PhoneDetailsWidget(this);
     m_mainLayout->addWidget(new DetailsGroupWidget(m_phoneDetailsWidget, this));
 
     m_facebookPostWidget = new FacebookConnector(this);

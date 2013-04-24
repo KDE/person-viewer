@@ -32,6 +32,7 @@ set(personviewer_SRCS
     persons-proxy-model.cpp
     person-details-view.cpp
     persons-delegate.cpp
+    phone-details-widget.cpp
     filter-bar.cpp
     main-window.cpp
     main.cpp)
