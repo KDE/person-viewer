@@ -27,6 +27,7 @@ class FacebookConnector;
 class QLabel;
 class PersonData;
 class QVBoxLayout;
+class AbstractPersonDetailsWidget;
 
 class PersonDetailsView : public QWidget
 {
@@ -41,7 +42,6 @@ public Q_SLOTS:
     void drawStuff();
 
 private:
-    QString accountTypeDisplayString(const QString &accountType) const;
     QPixmap iconForPresence(const QString &presenceString);
 
     PersonData *m_person;
@@ -52,6 +52,11 @@ private:
     QLabel *m_contactBirthdayLabel;
     QLabel *m_contactStatusLabel;
     QWidget *m_contactsListWidget;
+
+    AbstractPersonDetailsWidget *m_emailDetailsWidget;
+    AbstractPersonDetailsWidget *m_imDetailsWidget;
+    AbstractPersonDetailsWidget *m_phoneDetailsWidget;
+
     FacebookConnector *m_facebookPostWidget;
 };
 
