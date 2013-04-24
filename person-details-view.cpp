@@ -165,11 +165,6 @@ void PersonDetailsView::drawStuff()
     m_phoneDetailsWidget->setPerson(m_person);
     m_facebookPostWidget->setPerson(m_person);
 
-//     if (!m_person->contactUID().isEmpty()) {
-//         m_facebookPostWidget->setUserId(m_person->contactUID());
-//         m_facebookPostWidget->show();
-//     }
-
 }
 
 QPixmap PersonDetailsView::iconForPresence(const QString &presenceString)
