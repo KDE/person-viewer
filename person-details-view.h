@@ -56,8 +56,7 @@ private:
     AbstractPersonDetailsWidget *m_emailDetailsWidget;
     AbstractPersonDetailsWidget *m_imDetailsWidget;
     AbstractPersonDetailsWidget *m_phoneDetailsWidget;
-
-    FacebookConnector *m_facebookPostWidget;
+    AbstractPersonDetailsWidget *m_facebookPostWidget;
 };
 
 #endif // PERSON_DETAILS_VIEW_H
