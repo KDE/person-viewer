@@ -14,37 +14,57 @@
    <string>Address Book</string>
   </property>
   <widget class="QWidget" name="m_centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,500">
     <item>
-     <widget class="PersonsListView" name="m_personsView">
-      <property name="minimumSize">
-       <size>
-        <width>250</width>
-        <height>0</height>
-       </size>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="flow">
-       <enum>QListView::TopToBottom</enum>
-      </property>
-      <property name="gridSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="viewMode">
-       <enum>QListView::IconMode</enum>
-      </property>
-     </widget>
+      <item>
+       <widget class="PersonsListView" name="m_personsView">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>250</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="flow">
+         <enum>QListView::TopToBottom</enum>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="FilterBar" name="m_filterBar" native="true">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
+      </property>
       <item>
        <widget class="QPushButton" name="m_mergeButton">
         <property name="text">
@@ -74,8 +94,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>336</width>
-           <height>539</height>
+           <width>340</width>
+           <height>546</height>
           </rect>
          </property>
         </widget>
@@ -91,6 +111,12 @@
    <class>PersonsListView</class>
    <extends>QListView</extends>
    <header location="global">persons-list-view.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FilterBar</class>
+   <extends>QWidget</extends>
+   <header>filter-bar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
