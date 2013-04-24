@@ -26,7 +26,7 @@
 
 #include <KJob>
 
-#include "abstractpersondetailswidget.h"
+#include "abstract-person-details-widget.h"
 
 class QLabel;
 class KPixmapSequenceWidget;

@@ -20,7 +20,7 @@
 #ifndef PHONE_DETAILS_WIDGET_H
 #define PHONE_DETAILS_WIDGET_H
 
-#include "abstractpersondetailswidget.h"
+#include "abstract-person-details-widget.h"
 
 class QGridLayout;
 

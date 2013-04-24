@@ -24,7 +24,7 @@ include_directories(
 add_subdirectory (pixmaps)
 
 set(personviewer_SRCS
-    abstractpersondetailswidget.cpp
+    abstract-person-details-widget.cpp
     email-details-widget.cpp
     facebook-connector.cpp
     im-details-widget.cpp

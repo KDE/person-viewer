@@ -20,7 +20,7 @@
 #ifndef IM_DETAILS_WIDGET_H
 #define IM_DETAILS_WIDGET_H
 
-#include "abstractpersondetailswidget.h"
+#include "abstract-person-details-widget.h"
 
 class IMDetailsWidget : public AbstractPersonDetailsWidget
 {
