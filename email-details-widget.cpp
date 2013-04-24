@@ -37,6 +37,12 @@ EmailDetailsWidget::EmailDetailsWidget(QWidget *parent):
 
 void EmailDetailsWidget::setPerson(PersonData* person)
 {
+    if(person->emails().size() == 0) {
+        setActive(false);
+    } else {
+        setActive(true);
+    }
+
     if (layout()) {
         layout()->deleteLater();
     }

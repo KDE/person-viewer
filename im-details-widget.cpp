@@ -37,14 +37,20 @@ IMDetailsWidget::IMDetailsWidget(QWidget* parent):
 }
 
 
-void IMDetailsWidget::setPerson(PersonData* personData)
+void IMDetailsWidget::setPerson(PersonData* person)
 {
+    if(person->imAccounts().size() == 0) {
+        setActive(false);
+    } else {
+        setActive(true);
+    }
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
     //personData->imCaccounts is awful
 
-    QStringList imAccounts = personData->imAccounts();
+    QStringList imAccounts = person->imAccounts();
     for (int i = 0; i < imAccounts.size(); i++) {
         QLabel *name = new QLabel(accountTypeDisplayString(imAccounts.at(i++)), this);
 
