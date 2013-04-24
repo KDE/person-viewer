@@ -116,9 +116,7 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_mainLayout->addWidget(new DetailsGroupWidget(m_phoneDetailsWidget, this));
 
     m_facebookPostWidget = new FacebookConnector(this);
-
-    m_mainLayout->addWidget(m_facebookPostWidget);
-    m_facebookPostWidget->hide();
+    m_mainLayout->addWidget(new DetailsGroupWidget(m_facebookPostWidget, this));
 
     m_mainLayout->addSpacerItem(new QSpacerItem(32, 32, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
@@ -161,12 +159,10 @@ void PersonDetailsView::drawStuff()
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
 
-    m_facebookPostWidget->clear();
-    m_facebookPostWidget->hide();
-
     m_emailDetailsWidget->setPerson(m_person);
     m_imDetailsWidget->setPerson(m_person);
     m_phoneDetailsWidget->setPerson(m_person);
+    m_facebookPostWidget->setPerson(m_person);
 
 //     if (!m_person->contactUID().isEmpty()) {
 //         m_facebookPostWidget->setUserId(m_person->contactUID());

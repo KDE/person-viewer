@@ -23,19 +23,21 @@
 
 #include <QWidget>
 #include <QPointer>
+
 #include <KJob>
+
+#include "abstractpersondetailswidget.h"
 
 class QLabel;
 class KPixmapSequenceWidget;
 
-class FacebookConnector : public QWidget
+class FacebookConnector : public AbstractPersonDetailsWidget
 {
     Q_OBJECT
 public:
     FacebookConnector(QWidget *parent = 0);
 
-    void setUserId(const QString &userId);
-    void clear();
+    void setPerson(PersonData *person);
 
 Q_SIGNALS:
     void lastPostForUserReady(const QString &userId, const QString &post);
@@ -44,6 +46,9 @@ public Q_SLOTS:
     void lastPostFetched(KJob *job);
 
 private:
+    void setUserId(const QString &userId);
+    void clear();
+
     QString m_accessToken;
     QString m_userId;
     QPointer<KJob> m_runningJob;
