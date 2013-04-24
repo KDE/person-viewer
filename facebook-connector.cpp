@@ -120,7 +120,7 @@ void FacebookConnector::setPerson(PersonData* person)
         setActive(true);
         setUserId(userId);
     } else {
-        setActive(true);
+        setActive(false);
     }
 }
 
