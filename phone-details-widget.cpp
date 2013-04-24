@@ -32,7 +32,7 @@ PhoneDetailsWidget::PhoneDetailsWidget(QWidget *parent):
     AbstractPersonDetailsWidget(parent)
 {
     setTitle(i18n("Phone"));
-    setIcon(KIcon("mail-message"));
+    setIcon(KIcon("phone"));
 }
 
 void PhoneDetailsWidget::setPerson(PersonData* person)
