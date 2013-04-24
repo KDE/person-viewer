@@ -161,11 +161,6 @@ void PersonDetailsView::drawStuff()
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
 
-    qDeleteAll(m_contactsListWidget->children());
-    QGridLayout *layout = new QGridLayout(m_contactsListWidget);
-    layout->setColumnMinimumWidth(0, 22);
-
-    m_contactsListWidget->setLayout(layout);
     m_facebookPostWidget->clear();
     m_facebookPostWidget->hide();
 
@@ -177,9 +172,6 @@ void PersonDetailsView::drawStuff()
 //         m_facebookPostWidget->setUserId(m_person->contactUID());
 //         m_facebookPostWidget->show();
 //     }
-
-
-    layout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
 
 }
 
