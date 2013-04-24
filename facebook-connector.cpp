@@ -42,7 +42,7 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     : AbstractPersonDetailsWidget(parent)
 {
     setTitle(i18n("Facebook"));
-    setIcon(KIcon("im-facebook"));
+    setIcon(KIcon("facebookresource"));
 
     QDir d(KGlobal::dirs()->saveLocation("config", QString(), false));
 
@@ -53,29 +53,12 @@ FacebookConnector::FacebookConnector(QWidget *parent)
 
         m_accessToken = afGroup.readEntry("AccessToken");
     }
-    QGridLayout *mainLayout = new QGridLayout(this);
-    setLayout(mainLayout);
-    //     mainLayout->setColumnStretch(0, 1);
-    //     mainLayout->setColumnStretch(1, 2);
-    mainLayout->setColumnMinimumWidth(0, 22);
 
-    QLabel *facebookIcon = new QLabel(this);
-    facebookIcon->setPixmap(KIcon("facebookresource").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
-
-    mainLayout->addWidget(facebookIcon, 1, 0);
-
-    //     QVBoxLayout *layout = new QVBoxLayout(this);
-    //     mainLayout->addLayout(layout);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0,0,0,0);
+    setLayout(layout);
 
     QFont f;
-    f.setPixelSize(18);
-
-    QFrame *line = new QFrame(this);
-    line->setFrameShape(QFrame::HLine);
-
-    QLabel *title = new QLabel("Facebook Profile", this);
-    title->setFont(f);
-
     f.setPixelSize(16);
     m_lastPostTitle = new QLabel(this);
     m_lastPostTitle->setFont(f);
@@ -93,13 +76,10 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     m_profileLink = new QLabel(this);
     m_profileLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
 
-    mainLayout->addWidget(line, 0, 0, 1, 2);
-    mainLayout->addWidget(title, 1, 1);
-    mainLayout->addWidget(m_lastPostTitle, 2, 1);
-    mainLayout->addWidget(m_busyWidget, 3, 0);
-    mainLayout->addWidget(m_post, 3, 1);
-    mainLayout->addWidget(m_profileLink, 4, 1);
-    mainLayout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
+    layout->addWidget(m_lastPostTitle);
+    layout->addWidget(m_busyWidget);
+    layout->addWidget(m_post);
+    layout->addWidget(m_profileLink);
 }
 
 void FacebookConnector::setPerson(PersonData* person)
