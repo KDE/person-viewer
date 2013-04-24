@@ -29,15 +29,21 @@
 #include <KIcon>
 #include <KStandardDirs>
 #include <KConfigGroup>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLabel>
 #include <QDir>
 
+#include <kpeople/persondata.h>
+
 FacebookConnector::FacebookConnector(QWidget *parent)
-    : QWidget(parent)
+    : AbstractPersonDetailsWidget(parent)
 {
+    setTitle(i18n("Facebook"));
+    setIcon(KIcon("im-facebook"));
+
     QDir d(KGlobal::dirs()->saveLocation("config", QString(), false));
 
     QStringList akonadiFacebookConfigFileNames = d.entryList(QStringList() << "akonadi_facebook_resource*", QDir::Files);
@@ -94,6 +100,28 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     mainLayout->addWidget(m_post, 3, 1);
     mainLayout->addWidget(m_profileLink, 4, 1);
     mainLayout->addItem(new QSpacerItem(150, 1, QSizePolicy::Expanding, QSizePolicy::Minimum), 5, 1);
+}
+
+void FacebookConnector::setPerson(PersonData* person)
+{
+    QString userId;
+
+    userId = person->contactId();
+
+    //also search IM accounts for anything Facebook related
+    QStringList imAccounts = person->imAccounts();
+    for (int i=0;i<imAccounts.size();i+=3) {
+        if (imAccounts[i] == "facebook") {
+            userId = imAccounts[i+1];
+        }
+    }
+
+    if (!userId.isEmpty()) {
+        setActive(true);
+        setUserId(userId);
+    } else {
+        setActive(false);
+    }
 }
 
 void FacebookConnector::setUserId(const QString &userId)
