@@ -81,29 +81,7 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     layout->addWidget(m_profileLink);
 }
 
-void FacebookConnector::setPerson(PersonData* person)
-{
-    QString userId;
-
-    userId = person->contactId();
-
-    //also search IM accounts for anything Facebook related
-    QStringList imAccounts = person->imAccounts();
-    for (int i=0;i<imAccounts.size();i+=3) {
-        if (imAccounts[i] == "facebook") {
-            userId = imAccounts[i+1];
-        }
-    }
-
-    if (!userId.isEmpty()) {
-        setActive(true);
-        setUserId(userId);
-    } else {
-        setActive(false);
-    }
-}
-
-void FacebookConnector::setPerson(PersonData* person)
+void FacebookConnector::setPerson(PersonData *person)
 {
     QString userId;
 
