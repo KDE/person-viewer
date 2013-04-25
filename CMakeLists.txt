@@ -3,6 +3,7 @@ project(personviewer)
 set(KDE_MIN_VERSION "4.6.75")
 find_package (KDE4 4.6.75 REQUIRED)
 find_package(Nepomuk REQUIRED)
+find_package(NepomukCore REQUIRED)
 find_package(LibKFbAPI 1.0 REQUIRED)
 set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
                                             URL "http://projects.kde.org/libkfbapi"
@@ -35,7 +36,9 @@ set(personviewer_SRCS
     phone-details-widget.cpp
     filter-bar.cpp
     main-window.cpp
-    main.cpp)
+    main.cpp
+    recent-emails-details-widget.cpp
+)
 
 kde4_add_ui_files (personviewer_SRCS
                    main-window.ui
@@ -50,6 +53,7 @@ target_link_libraries (personviewer
                        kpeople
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
+                       ${NEPOMUK_CORE_LIBRARY}
                        ${NEPOMUK_LIBRARIES}
                        ${NEPOMUK_QUERY_LIBRARIES}
                        ${SOPRANO_LIBRARIES}

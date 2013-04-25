@@ -41,6 +41,7 @@
 #include "im-details-widget.h"
 #include "facebook-connector.h"
 #include "phone-details-widget.h"
+#include "recent-emails-details-widget.h"
 
 using namespace Nepomuk::Vocabulary;
 
@@ -119,6 +120,10 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_facebookPostWidget = new FacebookConnector(this);
     m_mainLayout->addWidget(new DetailsGroupWidget(m_facebookPostWidget, this));
 
+    m_recentEmailsWidget = new RecentEmailsDetailsWidget(this);
+    m_mainLayout->addWidget(new DetailsGroupWidget(m_recentEmailsWidget, this));
+
+
     m_mainLayout->addSpacerItem(new QSpacerItem(32, 32, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     //initialize the PresenceModel so when user selects an actual contact, we already have presences ready
@@ -164,6 +169,7 @@ void PersonDetailsView::drawStuff()
     m_imDetailsWidget->setPerson(m_person);
     m_phoneDetailsWidget->setPerson(m_person);
     m_facebookPostWidget->setPerson(m_person);
+    m_recentEmailsWidget->setPerson(m_person);
 
 }
 

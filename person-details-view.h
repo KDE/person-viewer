@@ -57,6 +57,8 @@ private:
     AbstractPersonDetailsWidget *m_imDetailsWidget;
     AbstractPersonDetailsWidget *m_phoneDetailsWidget;
     AbstractPersonDetailsWidget *m_facebookPostWidget;
+    AbstractPersonDetailsWidget *m_recentEmailsWidget;
+
 };
 
 #endif // PERSON_DETAILS_VIEW_H
