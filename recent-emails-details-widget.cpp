@@ -21,6 +21,7 @@
 
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QDateTime>
 
 #include <KLocalizedString>
 #include <KIcon>
@@ -49,7 +50,7 @@ RecentEmailsDetailsWidget::RecentEmailsDetailsWidget(QWidget* parent): AbstractP
     m_tableWidget = new QTreeWidget(this);
     m_tableWidget->setRootIsDecorated(false);
     m_tableWidget->setHeaderHidden(true);
-
+    m_tableWidget->setFrameShape(QFrame::NoFrame);
     connect(m_tableWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(onItemDoubleClicked(QTreeWidgetItem*)));
 
     layout->addWidget(m_tableWidget);
@@ -67,14 +68,14 @@ void RecentEmailsDetailsWidget::setPerson(PersonData* personData)
     m_tableWidget->clear();
 
     while (it.next()) {
-        QString uri = it[0].uri().toString();
-        bool isRead = it[1].toString() == "1";
-        QString subject = it[2].toString();
-        QString time = it[3].toString();
-        QString akonadiUrl = it[4].toString();
+        QString uri = it["uri"].uri().toString();
+        bool isRead = it["isRead"].literal().toBool();
+        QString subject = it["subject"].toString();
+        QDateTime time = it["messageDate"].literal().toDateTime();
+        QString akonadiUrl = it["akonadiUrl"].toString();
 
         qDebug() << isRead << subject << time;
-        QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << subject << time);
+        QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << subject << time.toString());
         item->setData(0, Qt::UserRole, akonadiUrl);
         item->setIcon(0, isRead ? KIcon("mail-message-read") : KIcon("mail-message-unread"));
         m_tableWidget->addTopLevelItem(item);
