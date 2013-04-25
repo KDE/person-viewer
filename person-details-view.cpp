@@ -108,21 +108,15 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
     m_mainLayout->addWidget(m_contactsListWidget);
 
 
-    m_emailDetailsWidget = new EmailDetailsWidget(this);
-    m_mainLayout->addWidget(new DetailsGroupWidget(m_emailDetailsWidget, this));
+    m_detailWidgets << new EmailDetailsWidget(this);
+    m_detailWidgets << new IMDetailsWidget(this);
+    m_detailWidgets <<  new PhoneDetailsWidget(this);
+    m_detailWidgets << new FacebookConnector(this);
+    m_detailWidgets <<  new RecentEmailsDetailsWidget(this);
 
-    m_imDetailsWidget = new IMDetailsWidget(this);
-    m_mainLayout->addWidget(new DetailsGroupWidget(m_imDetailsWidget, this));
-
-    m_phoneDetailsWidget = new PhoneDetailsWidget(this);
-    m_mainLayout->addWidget(new DetailsGroupWidget(m_phoneDetailsWidget, this));
-
-    m_facebookPostWidget = new FacebookConnector(this);
-    m_mainLayout->addWidget(new DetailsGroupWidget(m_facebookPostWidget, this));
-
-    m_recentEmailsWidget = new RecentEmailsDetailsWidget(this);
-    m_mainLayout->addWidget(new DetailsGroupWidget(m_recentEmailsWidget, this));
-
+    foreach(AbstractPersonDetailsWidget* detailsWidget, m_detailWidgets) {
+        m_mainLayout->addWidget(new DetailsGroupWidget(detailsWidget, this));
+    }
 
     m_mainLayout->addSpacerItem(new QSpacerItem(32, 32, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
@@ -165,12 +159,9 @@ void PersonDetailsView::drawStuff()
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
 
-    m_emailDetailsWidget->setPerson(m_person);
-    m_imDetailsWidget->setPerson(m_person);
-    m_phoneDetailsWidget->setPerson(m_person);
-    m_facebookPostWidget->setPerson(m_person);
-    m_recentEmailsWidget->setPerson(m_person);
-
+    foreach (AbstractPersonDetailsWidget* detailsWidget, m_detailWidgets) {
+        detailsWidget->setPerson(m_person);
+    }
 }
 
 QPixmap PersonDetailsView::iconForPresence(const QString &presenceString)

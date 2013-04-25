@@ -53,12 +53,7 @@ private:
     QLabel *m_contactStatusLabel;
     QWidget *m_contactsListWidget;
 
-    AbstractPersonDetailsWidget *m_emailDetailsWidget;
-    AbstractPersonDetailsWidget *m_imDetailsWidget;
-    AbstractPersonDetailsWidget *m_phoneDetailsWidget;
-    AbstractPersonDetailsWidget *m_facebookPostWidget;
-    AbstractPersonDetailsWidget *m_recentEmailsWidget;
-
+    QList<AbstractPersonDetailsWidget*> m_detailWidgets;
 };
 
 #endif // PERSON_DETAILS_VIEW_H
