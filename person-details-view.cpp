@@ -158,6 +158,7 @@ void PersonDetailsView::drawStuff()
     m_contactPixmap->setPixmap(avatar.scaled(96, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_contactNameLabel->setText(m_person->name());
     m_contactStatusLabel->setPixmap(iconForPresence(m_person->status()));
+    m_contactBirthdayLabel->setText(m_person->groups().join(", "));
 
     foreach (AbstractPersonDetailsWidget* detailsWidget, m_detailWidgets) {
         detailsWidget->setPerson(m_person);
