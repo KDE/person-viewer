@@ -26,6 +26,7 @@
 
 #include "ui_main-window.h"
 
+class KPixmapSequenceWidget;
 class MergingWidget;
 class QItemSelection;
 class PersonsDelegate;
@@ -48,12 +49,14 @@ private Q_SLOTS:
     void onPersonModelReady();
     void onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void onMergeButtonPressed();
+    void positionBusyOverlay();
 
 private:
     PersonsDelegate      *m_personsDelegate;
     PersonsModel         *m_personsModel;
     PersonsProxyModel    *m_personsProxyModel;
     QHash<QString, PersonDetailsView*> m_cachedDetails;
+    KPixmapSequenceWidget *m_busyWidget;
 };
 
 #endif // MAIN_WINDOW_H

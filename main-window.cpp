@@ -23,9 +23,12 @@
 #include "person-details-view.h"
 
 #include <QLayout>
+#include <QTimer>
 
 #include <KCategoryDrawer>
 #include <KDebug>
+#include <KPixmapSequence>
+#include <KPixmapSequenceWidget>
 
 #include <kpeople/persons-model.h>
 #include <kpeople/persondata.h>
@@ -49,6 +52,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_mergeButton->setVisible(false);
 
+    m_busyWidget = new KPixmapSequenceWidget(m_personsView);
+    //apparently KPixmapSequence has only few sizes, 22 is one of them
+    m_busyWidget->setSequence(KPixmapSequence("process-working", 22));
+
+    //we need to wait for the layouts to set new geometries
+    QTimer::singleShot(0, this, SLOT(positionBusyOverlay()));
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +79,7 @@ void MainWindow::onPersonModelReady()
     m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
 
     m_personsProxyModel->sort(0);
+    m_busyWidget->hide();
 
     connect(m_personsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
@@ -117,4 +127,12 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 void MainWindow::onMergeButtonPressed()
 {
     m_personsModel->createPersonFromIndexes(m_personsView->selectionModel()->selectedIndexes());
+}
+
+void MainWindow::positionBusyOverlay()
+{
+    m_busyWidget->setGeometry(m_personsView->size().width() / 2 - 11,
+                              m_personsView->size().height() / 2 - 11,
+                              22,
+                              22);
 }
