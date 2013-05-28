@@ -4,7 +4,7 @@ set(KDE_MIN_VERSION "4.6.75")
 find_package (KDE4 4.6.75 REQUIRED)
 find_package(Nepomuk REQUIRED)
 find_package(NepomukCore REQUIRED)
-find_package(LibKFbAPI 1.0 REQUIRED)
+find_package(LibKFbAPI 1.0)
 set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
                                             URL "http://projects.kde.org/libkfbapi"
                                             TYPE OPTIONAL
@@ -27,7 +27,6 @@ add_subdirectory (pixmaps)
 set(personviewer_SRCS
     abstract-person-details-widget.cpp
     email-details-widget.cpp
-    facebook-connector.cpp
     im-details-widget.cpp
     persons-list-view.cpp 
     persons-proxy-model.cpp
@@ -39,6 +38,11 @@ set(personviewer_SRCS
     main.cpp
     recent-emails-details-widget.cpp
 )
+
+if(LibKFbAPI_FOUND)
+    add_definitions(-DHAS_FACEBOOK)
+    set(personviewer_SRCS facebook-connector.cpp ${personviewer_SRCS})
+endif(LibKFbAPI_FOUND)
 
 kde4_add_ui_files (personviewer_SRCS
                    main-window.ui
