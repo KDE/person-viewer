@@ -2,7 +2,6 @@ project(personviewer)
 
 set(KDE_MIN_VERSION "4.6.75")
 find_package (KDE4 4.6.75 REQUIRED)
-find_package(Nepomuk REQUIRED)
 find_package(NepomukCore REQUIRED)
 find_package(LibKFbAPI 1.0)
 set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
@@ -18,7 +17,7 @@ include_directories(
   ${KDE4_INCLUDES}
   ${SOPRANO_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}
-  ${NEPOMUK_INCLUDE_DIR}
+  ${NEPOMUK_CORE_INCLUDE_DIR}
   ${LibKFbAPI_INCLUDE_DIR}
   )
 
@@ -58,8 +57,6 @@ target_link_libraries (personviewer
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
                        ${NEPOMUK_CORE_LIBRARY}
-                       ${NEPOMUK_LIBRARIES}
-                       ${NEPOMUK_QUERY_LIBRARIES}
                        ${SOPRANO_LIBRARIES}
                        ${LibKFbAPI_LIBRARY}
 )
