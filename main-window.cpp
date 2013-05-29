@@ -30,7 +30,7 @@
 #include <KPixmapSequence>
 #include <KPixmapSequenceWidget>
 
-#include <kpeople/persons-model.h>
+#include <kpeople/personsmodel.h>
 #include <kpeople/persondata.h>
 
 MainWindow::MainWindow(QWidget *parent)

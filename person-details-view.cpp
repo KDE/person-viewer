@@ -35,7 +35,7 @@
 #include <QModelIndex>
 
 #include <kpeople/persondata.h>
-#include <kpeople/persons-model.h>
+#include <kpeople/personsmodel.h>
 
 #include "email-details-widget.h"
 #include "im-details-widget.h"

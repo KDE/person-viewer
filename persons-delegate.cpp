@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QStyle>
 #include <QUrl>
-#include <kpeople/persons-model.h>
+#include <kpeople/personsmodel.h>
 #include <KDebug>
 #include <KIconLoader>
 #include <KStandardDirs>
