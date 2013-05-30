@@ -29,6 +29,7 @@ public:
     PersonsProxyModel(QObject *parent = 0);
     ~PersonsProxyModel();
 
+    virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 //     bool subSortLessThan(const QModelIndex &left, const QModelIndex &right) const;
 //     int compareCategories(const QModelIndex &left, const QModelIndex &right) const;

@@ -23,12 +23,15 @@
 PersonsProxyModel::PersonsProxyModel(QObject *parent)
     : KCategorizedSortFilterProxyModel(parent)
 {
-
 }
 
 PersonsProxyModel::~PersonsProxyModel()
 {
+}
 
+bool PersonsProxyModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
+{
+    return QSortFilterProxyModel::lessThan(left, right);
 }
 
 QVariant PersonsProxyModel::data(const QModelIndex &index, int role) const
@@ -38,9 +41,6 @@ QVariant PersonsProxyModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole) {
-        return index.data(Qt::DisplayRole).toString().left(1);
-    } else if (role == KCategorizedSortFilterProxyModel::CategorySortRole) {
-//         kDebug() <<
         return index.data(Qt::DisplayRole).toString().left(1);
     }
 
