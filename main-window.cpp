@@ -35,9 +35,9 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : KMainWindow(parent),
+    m_personsDelegate(0),
     m_personsModel(0),
-    m_personsProxyModel(0),
-    m_personsDelegate(0)
+    m_personsProxyModel(0)
 {
     setupUi(this);
 
@@ -84,7 +84,7 @@ void MainWindow::onPersonModelReady()
     connect(m_personsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
 
-    connect(m_mergeButton, SIGNAL(pressed()), SLOT(onMergeButtonPressed()));
+    connect(m_mergeButton, SIGNAL(clicked(bool)), SLOT(onMergeButtonPressed()));
 
     connect(m_filterBar, SIGNAL(filterChanged(QString)),
             m_personsProxyModel, SLOT(setFilterFixedString(QString)));
@@ -116,9 +116,8 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
     Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
         uri = index.data(PersonsModel::UriRole).toString();
-        if (m_cachedDetails.contains(uri)) {
-            m_cachedDetails[uri]->deleteLater();
-            m_cachedDetails.remove(uri);
+        if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
+            cached->deleteLater();
         }
         qDebug() << "removing" << uri;
     }
