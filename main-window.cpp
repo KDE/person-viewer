@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi(this);
 
     m_personsModel = new PersonsModel(0, PersonsModel::FeatureEmails | PersonsModel::FeatureAvatars | PersonsModel::FeatureIM, this);
-    connect(m_personsModel, SIGNAL(peopleAdded()),
+    connect(m_personsModel, SIGNAL(modelInitialized()),
             this, SLOT(onPersonModelReady()));
 
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
