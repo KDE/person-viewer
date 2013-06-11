@@ -20,7 +20,6 @@
 #include "persons-delegate.h"
 #include "persons-list-view.h"
 #include "persons-proxy-model.h"
-#include "person-details-view.h"
 
 #include <QLayout>
 #include <QTimer>
@@ -32,6 +31,7 @@
 
 #include <kpeople/personsmodel.h>
 #include <kpeople/persondata.h>
+#include <kpeople/widgets/persondetailsview.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : KMainWindow(parent),
@@ -106,7 +106,7 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
         uri = index.data(PersonsModel::UriRole).toString();
         PersonDetailsView *details = m_cachedDetails.value(uri);
         if (!details) {
-            details = new PersonDetailsView();
+            details = new PersonDetailsView(this);
             details->setPerson(new PersonData(uri, details));
             m_cachedDetails.insert(uri, details);
         }
