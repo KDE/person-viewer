@@ -44,7 +44,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi(this);
 
-    m_personsModel = new PersonsModel(0, PersonsModel::FeatureEmails | PersonsModel::FeatureAvatars | PersonsModel::FeatureIM, this);
+    m_personsModel = new PersonsModel(0, PersonsModel::FeatureFullName
+                                         | PersonsModel::FeatureEmails
+                                         | PersonsModel::FeatureAvatars
+                                         | PersonsModel::FeatureIM, this);
     connect(m_personsModel, SIGNAL(modelInitialized()),
             this, SLOT(onPersonModelReady()));
 
@@ -107,6 +110,12 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
     //add all new contacts
     Q_FOREACH (const QModelIndex &index, selected.indexes()) {
         uri = index.data(PersonsModel::UriRole).toString();
+        //if it's a fake person, use the uri of the contact instead
+        if (uri.left(10).compare("fakeperson") == 0) {
+            //there must not exist a person with 0 contacts
+            Q_ASSERT(index.model()->rowCount(index) > 0);
+            uri = index.data(PersonsModel::ChildContactsUriRole).toList().first().toString();
+        }
         PersonDetailsView *details = m_cachedDetails.value(uri);
         if (!details) {
             details = new PersonDetailsView();
@@ -119,6 +128,12 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
     Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
         uri = index.data(PersonsModel::UriRole).toString();
+        //if it's a fake person, use the uri of the contact instead
+        if (uri.left(10).compare("fakeperson") == 0) {
+            //there must not exist a person with 0 contacts
+            Q_ASSERT(index.model()->rowCount(index) > 0);
+            uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
+        }
         if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
             cached->deleteLater();
         }
