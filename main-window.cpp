@@ -32,6 +32,9 @@
 
 #include <kpeople/personsmodel.h>
 #include <kpeople/persondata.h>
+#include <kpeople/personsmodelfeature.h>
+
+using namespace KPeople;
 
 MainWindow::MainWindow(QWidget *parent)
     : KMainWindow(parent),

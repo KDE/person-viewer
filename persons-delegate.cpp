@@ -30,6 +30,8 @@
 const int SPACING = 8;
 const int PHOTO_SIZE = 32;
 
+using namespace KPeople;
+
 PersonsDelegate::PersonsDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
 {
@@ -60,7 +62,7 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     contactPhotoRect.setHeight(PHOTO_SIZE);
 
     QImage avatar;
-    QVariantList avatarList = index.data(PersonsModel::PhotoRole).toList();
+    QVariantList avatarList = index.data(PersonsModel::PhotosRole).toList();
 
     if (!avatarList.isEmpty()) {
         avatar.load(avatarList.first().toUrl().toLocalFile());
@@ -82,7 +84,7 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     QRect mailRect = nameRect;
     mailRect.adjust(0, nameRect.height(), 0, 0);
 
-    painter->drawText(mailRect, index.data(PersonsModel::EmailRole).toString());
+    painter->drawText(mailRect, index.data(PersonsModel::EmailsRole).toString());
 
     painter->restore();
 }

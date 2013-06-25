@@ -23,7 +23,7 @@
 
 #include <KIcon>
 
-class PersonData;
+namespace KPeople { class PersonData; }
 class AbstractPersonDetailsWidgetPrivate;
 
 class AbstractPersonDetailsWidget : public QWidget
@@ -34,7 +34,7 @@ public:
     virtual ~AbstractPersonDetailsWidget();
 
     /**Update to show the latest information for this person*/
-    virtual void setPerson(PersonData *personData) = 0;
+    virtual void setPerson(KPeople::PersonData *personData) = 0;
 
     /** The title to be displayed in a group header*/
     QString title() const;

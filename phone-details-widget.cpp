@@ -27,6 +27,8 @@
 
 #include <KLocalizedString>
 
+using namespace KPeople;
+
 PhoneDetailsWidget::PhoneDetailsWidget(QWidget *parent):
     AbstractPersonDetailsWidget(parent)
 {

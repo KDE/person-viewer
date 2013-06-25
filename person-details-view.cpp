@@ -44,6 +44,7 @@
 #include "recent-emails-details-widget.h"
 
 using namespace Nepomuk::Vocabulary;
+using namespace KPeople;
 
 class DetailsGroupWidget : public QWidget
 {
@@ -110,7 +111,7 @@ PersonDetailsView::PersonDetailsView(QWidget *parent)
 
     m_detailWidgets << new EmailDetailsWidget(this);
     m_detailWidgets << new IMDetailsWidget(this);
-    m_detailWidgets <<  new PhoneDetailsWidget(this);
+    m_detailWidgets << new PhoneDetailsWidget(this);
 #ifdef HAS_FACEBOOK
     //TODO: port to plugin system
     m_detailWidgets << new FacebookConnector(this);

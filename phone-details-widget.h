@@ -27,7 +27,7 @@ class PhoneDetailsWidget : public AbstractPersonDetailsWidget
 {
 public:
     explicit PhoneDetailsWidget(QWidget* parent = 0);
-    void setPerson(PersonData *person);
+    void setPerson(KPeople::PersonData *person);
 };
 
 #endif // PHONE_DETAILS_WIDGET_H

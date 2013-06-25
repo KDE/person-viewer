@@ -26,11 +26,11 @@
 
 #include "ui_main-window.h"
 
+namespace KPeople { class PersonsModel; }
 class KPixmapSequenceWidget;
 class MergingWidget;
 class QItemSelection;
 class PersonsDelegate;
-class PersonsModel;
 class PersonsProxyModel;
 class PersonDetailsView;
 
@@ -53,7 +53,7 @@ private Q_SLOTS:
 
 private:
     PersonsDelegate      *m_personsDelegate;
-    PersonsModel         *m_personsModel;
+    KPeople::PersonsModel *m_personsModel;
     PersonsProxyModel    *m_personsProxyModel;
     QHash<QString, PersonDetailsView*> m_cachedDetails;
     KPixmapSequenceWidget *m_busyWidget;

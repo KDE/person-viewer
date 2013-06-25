@@ -27,6 +27,8 @@
 
 #include <kpeople/persondata.h>
 
+using namespace KPeople;
+
 IMDetailsWidget::IMDetailsWidget(QWidget* parent):
     AbstractPersonDetailsWidget(parent)
 {

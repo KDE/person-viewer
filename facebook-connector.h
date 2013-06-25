@@ -36,7 +36,7 @@ class FacebookConnector : public AbstractPersonDetailsWidget
 public:
     FacebookConnector(QWidget *parent = 0);
 
-    void setPerson(PersonData *person);
+    void setPerson(KPeople::PersonData *person);
 
 Q_SIGNALS:
     void lastPostForUserReady(const QString &userId, const QString &post);

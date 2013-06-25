@@ -27,6 +27,8 @@
 
 #include <KLocalizedString>
 
+using namespace KPeople;
+
 EmailDetailsWidget::EmailDetailsWidget(QWidget *parent):
     AbstractPersonDetailsWidget(parent)
 {
@@ -34,7 +36,8 @@ EmailDetailsWidget::EmailDetailsWidget(QWidget *parent):
     setIcon(KIcon("mail-message"));
 }
 
-void EmailDetailsWidget::setPerson(PersonData* person)
+void EmailDetailsWidget::setPerson(PersonData
+* person)
 {
     if(person->emails().size() == 0) {
         setActive(false);

@@ -30,7 +30,7 @@ class RecentEmailsDetailsWidget : public AbstractPersonDetailsWidget
 Q_OBJECT
 public:
     explicit RecentEmailsDetailsWidget(QWidget* parent = 0);
-    virtual void setPerson(PersonData* personData);
+    virtual void setPerson(KPeople::PersonData* personData);
 
 private slots:
     void onItemDoubleClicked(QTreeWidgetItem *item);

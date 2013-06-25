@@ -39,6 +39,7 @@
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
 
+using namespace KPeople;
 
 RecentEmailsDetailsWidget::RecentEmailsDetailsWidget(QWidget* parent): AbstractPersonDetailsWidget(parent)
 {

@@ -23,9 +23,9 @@
 #include <QWidget>
 #include <QVariantList>
 
+namespace KPeople { class PersonData; }
 class FacebookConnector;
 class QLabel;
-class PersonData;
 class QVBoxLayout;
 class AbstractPersonDetailsWidget;
 
@@ -36,7 +36,7 @@ public:
     PersonDetailsView(QWidget *parent = 0);
     virtual ~PersonDetailsView();
 
-    void setPerson(PersonData *person);
+    void setPerson(KPeople::PersonData *person);
 
 public Q_SLOTS:
     void drawStuff();
@@ -44,7 +44,7 @@ public Q_SLOTS:
 private:
     QPixmap iconForPresence(const QString &presenceString);
 
-    PersonData *m_person;
+    KPeople::PersonData *m_person;
     QVBoxLayout *m_mainLayout;
 
     QLabel *m_contactPixmap;

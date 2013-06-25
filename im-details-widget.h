@@ -25,7 +25,7 @@ class IMDetailsWidget : public AbstractPersonDetailsWidget
 {
 public:
     IMDetailsWidget(QWidget *parent=0);
-    virtual void setPerson(PersonData*);
+    virtual void setPerson(KPeople::PersonData*);
 private:
     QString accountTypeDisplayString(const QString &accountType) const;
 };
