@@ -81,7 +81,7 @@ FacebookConnector::FacebookConnector(QWidget *parent)
     layout->addWidget(m_profileLink);
 }
 
-void FacebookConnector::setPerson(PersonData *person)
+void FacebookConnector::setPerson(KPeople::PersonData *person)
 {
     QString userId;
 
