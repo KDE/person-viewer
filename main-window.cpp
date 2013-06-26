@@ -44,12 +44,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi(this);
 
-    m_personsModel = new PersonsModel(0, PersonsModel::FeatureFullName
-                                         | PersonsModel::FeatureEmails
-                                         | PersonsModel::FeatureAvatars
-                                         | PersonsModel::FeatureIM, this);
+    m_personsModel = new PersonsModel(this);
     connect(m_personsModel, SIGNAL(modelInitialized()),
             this, SLOT(onPersonModelReady()));
+
+    QList<PersonsModelFeature> features;
+    features << PersonsModelFeature::emailModelFeature(true)
+             << PersonsModelFeature::avatarModelFeature(true)
+             << PersonsModelFeature::imModelFeature(true)
+             << PersonsModelFeature::fullNameModelFeature(true);
+    m_personsModel->startQuery(features);
 
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
