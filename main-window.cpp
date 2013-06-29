@@ -135,7 +135,7 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
         //if it's a fake person, use the uri of the contact instead
         if (uri.left(10).compare("fakeperson") == 0) {
             //there must not exist a person with 0 contacts
-            Q_ASSERT(index.model()->rowCount(index) > 0);
+//             Q_ASSERT(index.model()->rowCount(index) > 0);
             uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
         }
         if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
@@ -147,7 +147,12 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
 void MainWindow::onMergeButtonPressed()
 {
-    m_personsModel->createPersonFromIndexes(m_personsView->selectionModel()->selectedIndexes());
+    QList<QUrl> uris;
+    Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
+        uris << index.data(PersonsModel::UriRole).toUrl();
+    }
+
+    m_personsModel->createPersonFromUris(uris);
 }
 
 void MainWindow::positionBusyOverlay()
