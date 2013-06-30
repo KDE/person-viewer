@@ -24,28 +24,16 @@ include_directories(
 add_subdirectory (pixmaps)
 
 set(personviewer_SRCS
-    abstract-person-details-widget.cpp
-    email-details-widget.cpp
-    im-details-widget.cpp
     persons-list-view.cpp 
     persons-proxy-model.cpp
-    person-details-view.cpp
     persons-delegate.cpp
-    phone-details-widget.cpp
     filter-bar.cpp
     main-window.cpp
     main.cpp
-    recent-emails-details-widget.cpp
 )
-
-if(LibKFbAPI_FOUND)
-    add_definitions(-DHAS_FACEBOOK)
-    set(personviewer_SRCS facebook-connector.cpp ${personviewer_SRCS})
-endif(LibKFbAPI_FOUND)
 
 kde4_add_ui_files (personviewer_SRCS
                    main-window.ui
-                   person-details-view.ui
 )
 
 kde4_add_executable (personviewer
@@ -54,6 +42,7 @@ kde4_add_executable (personviewer
 
 target_link_libraries (personviewer
                        kpeople
+                       kpeoplewidgets
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
                        ${NEPOMUK_CORE_LIBRARY}

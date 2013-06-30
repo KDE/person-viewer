@@ -20,7 +20,6 @@
 #include "persons-delegate.h"
 #include "persons-list-view.h"
 #include "persons-proxy-model.h"
-#include "person-details-view.h"
 
 #include <QLayout>
 #include <QTimer>
@@ -30,9 +29,10 @@
 #include <KPixmapSequence>
 #include <KPixmapSequenceWidget>
 
-#include <kpeople/personsmodel.h>
-#include <kpeople/persondata.h>
-#include <kpeople/personsmodelfeature.h>
+#include <KPeople/PersonsModel>
+#include <KPeople/PersonData>
+#include <KPeople/PersonsModelFeature>
+#include <kpeople/widgets/persondetailsview.h>
 
 using namespace KPeople;
 
@@ -58,9 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    m_personsDetailsView->setLayout(new QVBoxLayout());
-
-    m_mergeButton->setVisible(false);
+    m_mergeList->setLayout(new QVBoxLayout());
 
     m_busyWidget = new KPixmapSequenceWidget(m_personsView);
     //apparently KPixmapSequence has only few sizes, 22 is one of them
@@ -103,42 +101,56 @@ void MainWindow::onPersonModelReady()
 
 void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    const QModelIndexList &indexes = m_personsView->selectionModel()->selectedIndexes();
 
-    if (m_personsView->selectionModel()->selectedIndexes().size() < 2) {
-        m_mergeButton->setVisible(false);
-    } else {
-        m_mergeButton->setVisible(true);
-    }
-    QString uri;
+    if (indexes.size() == 1) {
+        QString uri = indexes[0].data(PersonsModel::UriRole).toString();
 
-    //add all new contacts
-    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
-        uri = index.data(PersonsModel::UriRole).toString();
-        //if it's a fake person, use the uri of the contact instead
-        if (uri.left(10).compare("fakeperson") == 0) {
-            //there must not exist a person with 0 contacts
-            Q_ASSERT(index.model()->rowCount(index) > 0);
-            uri = index.data(PersonsModel::ChildContactsUriRole).toList().first().toString();
+        //FIXME this is bloody terrible. What was the point of the fake people lark? All it does is make things more complicated
+        if (uri.startsWith("fakeperson")) {
+            uri = indexes[0].child(0, 0).data(PersonsModel::UriRole).toString();
         }
+
+        m_stackWidget->setCurrentIndex(1);
+        PersonData *person = new PersonData(this);
+        //FIXME this memory management is mental
+        //KPeople::PersonDetailsView deletes the PersonData passed
+        //the next time setPerson is called.
+        //it implictly takes ownership \o/
+        //but if it didn't it would just leak horribly
+
+        //we need to realise that d_ed is right that shared pointers are the _only_ sensible way to do this
+        person->setUri(uri);
+
+        m_detailsView->setPerson(person);
+    } else {
+        m_stackWidget->setCurrentIndex(0);
+    }
+
+    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
+        QString uri = index.data(PersonsModel::UriRole).toString();
+        if (uri.startsWith("fakeperson")) {
+            uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
+        }
+
+
         PersonDetailsView *details = m_cachedDetails.value(uri);
         if (!details) {
             details = new PersonDetailsView();
             details->setPerson(new PersonData(uri, details));
             m_cachedDetails.insert(uri, details);
         }
-        qDebug() << "adding" << uri;
-        m_personsDetailsView->layout()->addWidget(details);
+        m_mergeList->layout()->addWidget(details);
     }
 
     Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
-        uri = index.data(PersonsModel::UriRole).toString();
+        QString uri = index.data(PersonsModel::UriRole).toString();
         //if it's a fake person, use the uri of the contact instead
-        if (uri.left(10).compare("fakeperson") == 0) {
-            //there must not exist a person with 0 contacts
-//             Q_ASSERT(index.model()->rowCount(index) > 0);
+        if (uri.startsWith("fakeperson")) {
             uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
         }
         if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
+            m_mergeList->layout()->removeWidget(cached);
             cached->deleteLater();
         }
         qDebug() << "removing" << uri;

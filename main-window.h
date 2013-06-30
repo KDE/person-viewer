@@ -26,13 +26,15 @@
 
 #include "ui_main-window.h"
 
-namespace KPeople { class PersonsModel; }
+namespace KPeople {
+    class PersonsModel;
+    class PersonDetailsView;
+}
 class KPixmapSequenceWidget;
 class MergingWidget;
 class QItemSelection;
 class PersonsDelegate;
 class PersonsProxyModel;
-class PersonDetailsView;
 
 class MainWindow : public KMainWindow, Ui::MainWindow
 {
@@ -55,7 +57,7 @@ private:
     PersonsDelegate      *m_personsDelegate;
     KPeople::PersonsModel *m_personsModel;
     PersonsProxyModel    *m_personsProxyModel;
-    QHash<QString, PersonDetailsView*> m_cachedDetails;
+    QHash<QString, KPeople::PersonDetailsView*> m_cachedDetails;
     KPixmapSequenceWidget *m_busyWidget;
 };
 
