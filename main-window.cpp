@@ -106,21 +106,8 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
     if (indexes.size() == 1) {
         QString uri = indexes[0].data(PersonsModel::UriRole).toString();
 
-        //FIXME this is bloody terrible. What was the point of the fake people lark? All it does is make things more complicated
-        if (uri.startsWith("fakeperson")) {
-            uri = indexes[0].child(0, 0).data(PersonsModel::UriRole).toString();
-        }
-
         m_stackWidget->setCurrentIndex(1);
-        PersonData *person = new PersonData(this);
-        //FIXME this memory management is mental
-        //KPeople::PersonDetailsView deletes the PersonData passed
-        //the next time setPerson is called.
-        //it implictly takes ownership \o/
-        //but if it didn't it would just leak horribly
-
-        //we need to realise that d_ed is right that shared pointers are the _only_ sensible way to do this
-        person->setUri(uri);
+        PersonDataPtr person = PersonData::createFromUri(uri);
 
         m_detailsView->setPerson(person);
     } else {
@@ -129,15 +116,10 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
     Q_FOREACH (const QModelIndex &index, selected.indexes()) {
         QString uri = index.data(PersonsModel::UriRole).toString();
-        if (uri.startsWith("fakeperson")) {
-            uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
-        }
-
-
         PersonDetailsView *details = m_cachedDetails.value(uri);
         if (!details) {
             details = new PersonDetailsView();
-            details->setPerson(new PersonData(uri, details));
+            details->setPerson(PersonData::createFromUri(uri));
             m_cachedDetails.insert(uri, details);
         }
         m_mergeList->layout()->addWidget(details);
@@ -145,10 +127,6 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
     Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
         QString uri = index.data(PersonsModel::UriRole).toString();
-        //if it's a fake person, use the uri of the contact instead
-        if (uri.startsWith("fakeperson")) {
-            uri = index.child(0, 0).data(PersonsModel::UriRole).toString();
-        }
         if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
             m_mergeList->layout()->removeWidget(cached);
             cached->deleteLater();
