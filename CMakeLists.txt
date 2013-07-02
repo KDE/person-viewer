@@ -1,7 +1,8 @@
 project(personviewer)
 
 set(KDE_MIN_VERSION "4.6.75")
-find_package (KDE4 4.6.75 REQUIRED)
+find_package(KDE4 4.6.75 REQUIRED)
+find_package(KPeople REQUIRED)
 find_package(NepomukCore REQUIRED)
 find_package(LibKFbAPI 1.0)
 set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
@@ -19,7 +20,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${LibKFbAPI_INCLUDE_DIR}
-  )
+  ${KPEOPLE_INCLUDES}
+)
 
 add_subdirectory (pixmaps)
 
