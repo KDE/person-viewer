@@ -96,8 +96,9 @@ void MainWindow::onPersonModelReady()
 
     connect(m_filterBar, SIGNAL(filterChanged(QString)),
             m_personsProxyModel, SLOT(setFilterFixedString(QString)));
-}
 
+    m_detailsView->setPersonsModel(m_personsModel);
+}
 
 void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
