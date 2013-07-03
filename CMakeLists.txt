@@ -23,8 +23,6 @@ include_directories(
   ${KPEOPLE_INCLUDES}
 )
 
-add_subdirectory (pixmaps)
-
 set(personviewer_SRCS
     persons-list-view.cpp 
     persons-proxy-model.cpp
