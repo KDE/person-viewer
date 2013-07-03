@@ -120,6 +120,7 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
         if (!details) {
             details = new PersonDetailsView();
             details->setPerson(PersonData::createFromUri(uri));
+            details->setPersonsModel(m_personsModel);
             m_cachedDetails.insert(uri, details);
         }
         m_mergeList->layout()->addWidget(details);
