@@ -1,7 +1,22 @@
 [Desktop Entry]
 Name=Person Viewer
+Name[nl]=Viewer van persoon
+Name[pt]=Visualizador de Pessoas
+Name[pt_BR]=Visualizador de pessoas
+Name[uk]=Перегляд контактів
+Name[x-test]=xxPerson Viewerxx
 GenericName=Person Viewer
+GenericName[nl]=Viewer van persoon
+GenericName[pt]=Visualizador de Pessoas
+GenericName[pt_BR]=Visualizador de pessoas
+GenericName[uk]=Перегляд контактів
+GenericName[x-test]=xxPerson Viewerxx
 Comment=Displays your Nepomuk contacts
+Comment[nl]=Toont uw contactpersonen van Nepomuk
+Comment[pt]=Mostra os seus contactos no Nepomuk
+Comment[pt_BR]=Mostra os seus contatos no Nepomuk
+Comment[uk]=Показ ваших записів контактів у Nepomuk
+Comment[x-test]=xxDisplays your Nepomuk contactsxx
 Exec=person-viewer
 Type=Application
 Terminal=false
