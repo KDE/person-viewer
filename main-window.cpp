@@ -49,10 +49,10 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(onPersonModelReady()));
 
     QList<PersonsModelFeature> features;
-    features << PersonsModelFeature::emailModelFeature(true)
-             << PersonsModelFeature::avatarModelFeature(true)
-             << PersonsModelFeature::imModelFeature(true)
-             << PersonsModelFeature::fullNameModelFeature(true);
+    features << PersonsModelFeature::emailModelFeature()
+             << PersonsModelFeature::avatarModelFeature()
+             << PersonsModelFeature::imModelFeature()
+             << PersonsModelFeature::fullNameModelFeature();
     m_personsModel->startQuery(features);
 
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
