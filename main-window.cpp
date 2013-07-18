@@ -103,38 +103,42 @@ void MainWindow::onPersonModelReady()
 
 void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    Q_UNUSED(selected);
+    Q_UNUSED(deselected);
+
     const QModelIndexList &indexes = m_personsView->selectionModel()->selectedIndexes();
 
-    if (indexes.size() == 1) {
-        QString uri = indexes[0].data(PersonsModel::UriRole).toString();
+    QList<QUrl> selectedUris;
 
-        m_stackWidget->setCurrentIndex(1);
-        PersonDataPtr person = PersonData::createFromUri(uri);
+    //collect selected uris
+    Q_FOREACH (const QModelIndex &index, indexes) {
+        selectedUris << index.data(PersonsModel::UriRole).toUrl();
+    }
 
-        m_detailsView->setPerson(person);
+    if (selectedUris.size() <= 1) {
+        m_mergeButton->setVisible(false);
     } else {
-        m_stackWidget->setCurrentIndex(0);
+        m_mergeButton->setVisible(true);
     }
 
-    Q_FOREACH (const QModelIndex &index, selected.indexes()) {
-        QString uri = index.data(PersonsModel::UriRole).toString();
+    //delete widgets not present among the selected uris
+    Q_FOREACH (const QUrl &uri, m_cachedDetails.keys()) {
         PersonDetailsView *details = m_cachedDetails.value(uri);
-        if (!details) {
-            details = new PersonDetailsView();
-            details->setPerson(PersonData::createFromUri(uri));
-            details->setPersonsModel(m_personsModel);
-            m_cachedDetails.insert(uri, details);
+        if (!selectedUris.contains(uri) && details) {
+            m_mergeList->layout()->removeWidget(details);
+            details->deleteLater();
+            m_cachedDetails.remove(uri);
+        } else {
+            selectedUris.removeAll(uri);
         }
-        m_mergeList->layout()->addWidget(details);
     }
 
-    Q_FOREACH (const QModelIndex &index, deselected.indexes()) {
-        QString uri = index.data(PersonsModel::UriRole).toString();
-        if (PersonDetailsView* cached = m_cachedDetails.take(uri)) {
-            m_mergeList->layout()->removeWidget(cached);
-            cached->deleteLater();
-        }
-        qDebug() << "removing" << uri;
+    Q_FOREACH (const QUrl &uri, selectedUris) {
+        PersonDetailsView *details = new PersonDetailsView();
+        details->setPerson(PersonData::createFromUri(uri));
+        details->setPersonsModel(m_personsModel);
+        m_mergeList->layout()->addWidget(details);
+        m_cachedDetails.insert(uri, details);
     }
 }
 
