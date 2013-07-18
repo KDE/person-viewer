@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     m_mergeList->setLayout(new QVBoxLayout());
+    m_mergeButton->setVisible(false);
 
     m_busyWidget = new KPixmapSequenceWidget(m_personsView);
     //apparently KPixmapSequence has only few sizes, 22 is one of them
