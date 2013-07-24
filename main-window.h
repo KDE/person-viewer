@@ -52,6 +52,7 @@ private Q_SLOTS:
     void onSelectedContactsChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void onMergeButtonPressed();
     void positionBusyOverlay();
+    void prepareMergeListView(const bool loadModel);
 
 private:
     PersonsDelegate      *m_personsDelegate;

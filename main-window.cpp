@@ -106,17 +106,19 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 
     const QModelIndexList &indexes = m_personsView->selectionModel()->selectedIndexes();
 
+    bool multipleSelection = indexes.size() > 1;
+    m_mergeButton->setVisible(multipleSelection);
+    prepareMergeListView(multipleSelection);
+}
+
+void MainWindow::prepareMergeListView(const bool multipleSelection)
+{
+    const QModelIndexList &indexes = m_personsView->selectionModel()->selectedIndexes();
     QList<QUrl> selectedUris;
 
     //collect selected uris
     Q_FOREACH (const QModelIndex &index, indexes) {
         selectedUris << index.data(PersonsModel::UriRole).toUrl();
-    }
-
-    if (selectedUris.size() <= 1) {
-        m_mergeButton->setVisible(false);
-    } else {
-        m_mergeButton->setVisible(true);
     }
 
     //delete widgets not present among the selected uris
@@ -132,9 +134,15 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
     }
 
     Q_FOREACH (const QUrl &uri, selectedUris) {
+
         PersonDetailsView *details = new PersonDetailsView();
         details->setPerson(PersonData::createFromUri(uri));
-        details->setPersonsModel(m_personsModel);
+        if (!multipleSelection) {
+            details->setPersonsModel(m_personsModel);
+        } else { // Hack : we clean the model of the view to avoid the merge suggestion button appear in the multiple selection mode
+            QHash< QUrl, PersonDetailsView* >::iterator iterator = m_cachedDetails.begin();
+            iterator.value()->setPersonsModel(0);
+        }
         m_mergeList->layout()->addWidget(details);
         m_cachedDetails.insert(uri, details);
     }
