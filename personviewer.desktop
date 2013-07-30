@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Person Viewer
+Name[cs]=Prohlížeč osob
 Name[fr]=Afficheur de personnes
 Name[hu]=Személy megjelenítő
 Name[it]=Visore contatti
@@ -11,6 +12,7 @@ Name[sv]=Personvisning
 Name[uk]=Перегляд контактів
 Name[x-test]=xxPerson Viewerxx
 GenericName=Person Viewer
+GenericName[cs]=Prohlížeč osob
 GenericName[fr]=Afficheur de personnes
 GenericName[hu]=Személy megjelenítő
 GenericName[it]=Visore contatti
@@ -22,6 +24,7 @@ GenericName[sv]=Personvisning
 GenericName[uk]=Перегляд контактів
 GenericName[x-test]=xxPerson Viewerxx
 Comment=Displays your Nepomuk contacts
+Comment[cs]=Zobrazí vaše kontakty v Nepomuku
 Comment[fr]=Affiche vos contacts Nepomuk
 Comment[hu]=Megjeleníti a Nepomuk partnereit
 Comment[it]=Visualizza i contatti di Nepomuk
