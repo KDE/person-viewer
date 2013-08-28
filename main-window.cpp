@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     features << PersonsModelFeature::emailModelFeature()
              << PersonsModelFeature::avatarModelFeature()
              << PersonsModelFeature::imModelFeature()
+             << PersonsModelFeature::nicknameModelFeature()
              << PersonsModelFeature::fullNameModelFeature();
     m_personsModel->startQuery(features);
 
