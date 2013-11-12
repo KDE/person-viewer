@@ -61,17 +61,7 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     contactPhotoRect.setWidth(PHOTO_SIZE);
     contactPhotoRect.setHeight(PHOTO_SIZE);
 
-    QImage avatar;
-    QVariantList avatarList = index.data(PersonsModel::PhotosRole).toList();
-
-    if (!avatarList.isEmpty()) {
-        avatar.load(avatarList.first().toUrl().toLocalFile());
-    }
-
-    if (avatar.isNull()) {
-        avatar.load(m_avatarImagePath);
-    }
-
+    QImage avatar = index.data(Qt::DecorationRole).value<QImage>();
     painter->drawImage(contactPhotoRect, avatar);
 
     painter->drawRect(contactPhotoRect);
@@ -80,11 +70,6 @@ void PersonsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     nameRect.adjust(SPACING + PHOTO_SIZE + SPACING, SPACING, 0, 0);
 
     painter->drawText(nameRect, index.data(Qt::DisplayRole).toString());
-
-    QRect mailRect = nameRect;
-    mailRect.adjust(0, nameRect.height(), 0, 0);
-
-    painter->drawText(mailRect, index.data(PersonsModel::EmailsRole).toString());
 
     painter->restore();
 }

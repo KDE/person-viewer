@@ -45,16 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi(this);
 
     m_personsModel = new PersonsModel(this);
-    connect(m_personsModel, SIGNAL(modelInitialized()),
-            this, SLOT(onPersonModelReady()));
+//     connect(m_personsModel, SIGNAL(modelInitialized()),
+//             this, SLOT(onPersonModelReady()));
 
-    QList<PersonsModelFeature> features;
-    features << PersonsModelFeature::emailModelFeature()
-             << PersonsModelFeature::avatarModelFeature()
-             << PersonsModelFeature::imModelFeature()
-             << PersonsModelFeature::nicknameModelFeature()
-             << PersonsModelFeature::fullNameModelFeature();
-    m_personsModel->startQuery(features);
+    onPersonModelReady();
 
     m_personsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_personsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -89,7 +83,7 @@ void MainWindow::onPersonModelReady()
     m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
 
     m_personsProxyModel->sort(0);
-    m_busyWidget->hide();
+//     m_busyWidget->hide();
 
     connect(m_personsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(onSelectedContactsChanged(QItemSelection,QItemSelection)));
@@ -119,44 +113,44 @@ void MainWindow::prepareMergeListView(const bool multipleSelection)
 
     //collect selected uris
     Q_FOREACH (const QModelIndex &index, indexes) {
-        selectedUris << index.data(PersonsModel::UriRole).toUrl();
+        selectedUris << index.data(PersonsModel::PersonIdRole).toUrl();
     }
 
     //delete widgets not present among the selected uris
-    Q_FOREACH (const QUrl &uri, m_cachedDetails.keys()) {
-        PersonDetailsView *details = m_cachedDetails.value(uri);
-        if (!selectedUris.contains(uri) && details) {
-            m_mergeList->layout()->removeWidget(details);
-            details->deleteLater();
-            m_cachedDetails.remove(uri);
-        } else {
-            selectedUris.removeAll(uri);
-        }
-    }
+//     Q_FOREACH (const QUrl &uri, m_cachedDetails.keys()) {
+//         PersonDetailsView *details = m_cachedDetails.value(uri);
+//         if (!selectedUris.contains(uri) && details) {
+//             m_mergeList->layout()->removeWidget(details);
+//             details->deleteLater();
+//             m_cachedDetails.remove(uri);
+//         } else {
+//             selectedUris.removeAll(uri);
+//         }
+//     }
 
-    Q_FOREACH (const QUrl &uri, selectedUris) {
+//     Q_FOREACH (const QUrl &uri, selectedUris) {
 
-        PersonDetailsView *details = new PersonDetailsView();
-        details->setPerson(PersonData::createFromUri(uri));
-        if (!multipleSelection) {
-            details->setPersonsModel(m_personsModel);
-        } else { // Hack : we clean the model of the view to avoid the merge suggestion button appear in the multiple selection mode
-            QHash< QUrl, PersonDetailsView* >::iterator iterator = m_cachedDetails.begin();
-            iterator.value()->setPersonsModel(0);
-        }
-        m_mergeList->layout()->addWidget(details);
-        m_cachedDetails.insert(uri, details);
-    }
+//         PersonDetailsView *details = new PersonDetailsView();
+//         details->setPerson(PersonData::createFromUri(uri));
+//         if (!multipleSelection) {
+//             details->setPersonsModel(m_personsModel);
+//         } else { // Hack : we clean the model of the view to avoid the merge suggestion button appear in the multiple selection mode
+//             QHash< QUrl, PersonDetailsView* >::iterator iterator = m_cachedDetails.begin();
+//             iterator.value()->setPersonsModel(0);
+//         }
+//         m_mergeList->layout()->addWidget(details);
+//         m_cachedDetails.insert(uri, details);
+//     }
 }
 
 void MainWindow::onMergeButtonPressed()
 {
-    QList<QUrl> uris;
-    Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
-        uris << index.data(PersonsModel::UriRole).toUrl();
-    }
+//     QList<QUrl> uris;
+//     Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
+//         uris << index.data(PersonsModel::PersonIdRole).toUrl();
+//     }
 
-    m_personsModel->createPersonFromUris(uris);
+//     m_personsModel->createPersonFromUris(uris);
 }
 
 void MainWindow::positionBusyOverlay()
