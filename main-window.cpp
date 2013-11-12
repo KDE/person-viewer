@@ -80,7 +80,7 @@ void MainWindow::onPersonModelReady()
 
     m_personsView->setModel(m_personsProxyModel);
     m_personsView->setItemDelegate(m_personsDelegate);
-    m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
+//     m_personsView->setCategoryDrawer(new KCategoryDrawerV3(m_personsView));
 
     m_personsProxyModel->sort(0);
 //     m_busyWidget->hide();
