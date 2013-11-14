@@ -42,7 +42,7 @@ kde4_add_executable (personviewer
 
 target_link_libraries (personviewer
                        ${KPEOPLE_LIBRARY}
-#                        ${KPEOPLEWIDGETS_LIBRARY}
+                       ${KPEOPLEWIDGETS_LIBRARY}
                        ${KDE4_KDEUI_LIBS}
                        ${KDE4_KIO_LIBS}
                        ${NEPOMUK_CORE_LIBRARY}

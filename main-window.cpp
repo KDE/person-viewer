@@ -109,38 +109,38 @@ void MainWindow::onSelectedContactsChanged(const QItemSelection &selected, const
 void MainWindow::prepareMergeListView(const bool multipleSelection)
 {
     const QModelIndexList &indexes = m_personsView->selectionModel()->selectedIndexes();
-    QList<QUrl> selectedUris;
+    QStringList selectedUris;
 
     //collect selected uris
     Q_FOREACH (const QModelIndex &index, indexes) {
-        selectedUris << index.data(PersonsModel::PersonIdRole).toUrl();
+        selectedUris << index.data(PersonsModel::PersonIdRole).toString();
     }
 
     //delete widgets not present among the selected uris
-//     Q_FOREACH (const QUrl &uri, m_cachedDetails.keys()) {
-//         PersonDetailsView *details = m_cachedDetails.value(uri);
-//         if (!selectedUris.contains(uri) && details) {
-//             m_mergeList->layout()->removeWidget(details);
-//             details->deleteLater();
-//             m_cachedDetails.remove(uri);
-//         } else {
-//             selectedUris.removeAll(uri);
-//         }
-//     }
+    Q_FOREACH (const QString &uri, m_cachedDetails.keys()) {
+        PersonDetailsView *details = m_cachedDetails.value(uri);
+        if (!selectedUris.contains(uri) && details) {
+            m_mergeList->layout()->removeWidget(details);
+            details->deleteLater();
+            m_cachedDetails.remove(uri);
+        } else {
+            selectedUris.removeAll(uri);
+        }
+    }
 
-//     Q_FOREACH (const QUrl &uri, selectedUris) {
+    Q_FOREACH (const QString &uri, selectedUris) {
 
-//         PersonDetailsView *details = new PersonDetailsView();
-//         details->setPerson(PersonData::createFromUri(uri));
-//         if (!multipleSelection) {
+        PersonDetailsView *details = new PersonDetailsView();
+        details->setPerson(new PersonData(uri, details));
+        if (!multipleSelection) {
 //             details->setPersonsModel(m_personsModel);
-//         } else { // Hack : we clean the model of the view to avoid the merge suggestion button appear in the multiple selection mode
+        } else { // Hack : we clean the model of the view to avoid the merge suggestion button appear in the multiple selection mode
 //             QHash< QUrl, PersonDetailsView* >::iterator iterator = m_cachedDetails.begin();
 //             iterator.value()->setPersonsModel(0);
-//         }
-//         m_mergeList->layout()->addWidget(details);
-//         m_cachedDetails.insert(uri, details);
-//     }
+        }
+        m_mergeList->layout()->addWidget(details);
+        m_cachedDetails.insert(uri, details);
+    }
 }
 
 void MainWindow::onMergeButtonPressed()

@@ -58,7 +58,7 @@ private:
     PersonsDelegate      *m_personsDelegate;
     KPeople::PersonsModel *m_personsModel;
     PersonsProxyModel    *m_personsProxyModel;
-//     QHash<QUrl, KPeople::PersonDetailsView*> m_cachedDetails;
+    QHash<QString, KPeople::PersonDetailsView*> m_cachedDetails;
     KPixmapSequenceWidget *m_busyWidget;
 };
 
