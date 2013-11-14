@@ -57,9 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_mergeList->setLayout(new QVBoxLayout());
     m_mergeButton->setVisible(false);
 
-    m_busyWidget = new KPixmapSequenceWidget(m_personsView);
+//     m_busyWidget = new KPixmapSequenceWidget(m_personsView);
     //apparently KPixmapSequence has only few sizes, 22 is one of them
-    m_busyWidget->setSequence(KPixmapSequence("process-working", 22));
+//     m_busyWidget->setSequence(KPixmapSequence("process-working", 22));
 
     //we need to wait for the layouts to set new geometries
     QTimer::singleShot(0, this, SLOT(positionBusyOverlay()));
@@ -156,8 +156,8 @@ void MainWindow::onMergeButtonPressed()
 
 void MainWindow::positionBusyOverlay()
 {
-    m_busyWidget->setGeometry(m_personsView->size().width() / 2 - 11,
-                              m_personsView->size().height() / 2 - 11,
-                              22,
-                              22);
+//     m_busyWidget->setGeometry(m_personsView->size().width() / 2 - 11,
+//                               m_personsView->size().height() / 2 - 11,
+//                               22,
+//                               22);
 }
