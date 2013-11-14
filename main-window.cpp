@@ -31,7 +31,6 @@
 
 #include <KPeople/PersonsModel>
 #include <KPeople/PersonData>
-#include <KPeople/PersonsModelFeature>
 #include <kpeople/global.h>
 #include <kpeople/widgets/persondetailsview.h>
 
