@@ -20,6 +20,7 @@
 #include "persons-delegate.h"
 #include "persons-list-view.h"
 #include "persons-proxy-model.h"
+#include "../../network/libkpeople/src/global.h"
 
 #include <QLayout>
 #include <QTimer>
@@ -145,12 +146,12 @@ void MainWindow::prepareMergeListView(const bool multipleSelection)
 
 void MainWindow::onMergeButtonPressed()
 {
-//     QList<QUrl> uris;
-//     Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
-//         uris << index.data(PersonsModel::PersonIdRole).toUrl();
-//     }
+    QStringList uris;
+    Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
+        uris << index.data(PersonsModel::PersonIdRole).toString();
+    }
 
-//     m_personsModel->createPersonFromUris(uris);
+    KPeople::mergeContacts(uris);
 }
 
 void MainWindow::positionBusyOverlay()
