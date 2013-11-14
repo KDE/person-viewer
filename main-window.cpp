@@ -20,7 +20,6 @@
 #include "persons-delegate.h"
 #include "persons-list-view.h"
 #include "persons-proxy-model.h"
-#include "../../network/libkpeople/src/global.h"
 
 #include <QLayout>
 #include <QTimer>
@@ -33,6 +32,7 @@
 #include <KPeople/PersonsModel>
 #include <KPeople/PersonData>
 #include <KPeople/PersonsModelFeature>
+#include <kpeople/global.h>
 #include <kpeople/widgets/persondetailsview.h>
 
 using namespace KPeople;
