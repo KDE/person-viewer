@@ -16,15 +16,15 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KApplication>
 #include <KCmdLineArgs>
 
 #include <main-window.h>
 
 int main(int argc, char **argv) {
-    KAboutData aboutData("person-viewer", 0, ki18n("PIMO:Person Viewer"), "0.1",
-                         ki18n("PIMO:Person Viewer"), KAboutData::License_GPL_V2,
+    K4AboutData aboutData("person-viewer", 0, ki18n("PIMO:Person Viewer"), "0.1",
+                         ki18n("PIMO:Person Viewer"), K4AboutData::License_GPL_V2,
                          ki18n("(C) 2012, 2013, Martin Klapetek"));
 
     aboutData.addAuthor(ki18nc("@info:credit", "Martin Klapetek"), ki18n("Developer"),

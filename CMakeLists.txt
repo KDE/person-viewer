@@ -1,25 +1,21 @@
-project(personviewer)
+project(PersonViewer)
 
-set(KDE_MIN_VERSION "4.6.75")
-find_package(KDE4 4.6.75 REQUIRED)
-find_package(KPeople REQUIRED)
+cmake_minimum_required(VERSION 2.8.12)
+
+find_package(ECM 1.3.0 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+
+find_package(KF5 REQUIRED COMPONENTS WidgetsAddons KDELibs4Support)
+find_package(KF5People 0.5 REQUIRED)
 find_package(LibKFbAPI 1.0)
 set_package_properties(LibKFbAPI PROPERTIES DESCRIPTION "A library to access Facebook services"
                                             URL "http://projects.kde.org/libkfbapi"
                                             TYPE OPTIONAL
                                             PURPOSE "LibKFbAPI is required to build Akonadi resources to access Facebook's contacts, events, notes and posts" )
 
-include (KDE4Defaults)
-include (MacroLibrary)
-
-include_directories(
-  ${QT_INCLUDES}
-  ${KDE4_INCLUDES}
-  ${SOPRANO_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}
-  ${LibKFbAPI_INCLUDE_DIR}
-  ${KPEOPLE_INCLUDES}
-)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
 
 set(personviewer_SRCS
     persons-list-view.cpp 
@@ -30,25 +26,21 @@ set(personviewer_SRCS
     main.cpp
 )
 
-kde4_add_ui_files (personviewer_SRCS
+qt5_wrap_ui (personviewer_SRCS
                    main-window.ui
 )
 
-kde4_add_executable (personviewer
+add_executable (personviewer
                      ${personviewer_SRCS}
 )
 
 target_link_libraries (personviewer
-                       ${KPEOPLE_LIBRARY}
-                       ${KPEOPLEWIDGETS_LIBRARY}
-                       ${KDE4_KDEUI_LIBS}
-                       ${KDE4_KIO_LIBS}
-                       ${SOPRANO_LIBRARIES}
-                       ${LibKFbAPI_LIBRARY}
+                       KF5::PeopleWidgets
+                       KF5::KDELibs4Support
 )
 
 install (TARGETS personviewer
-         DESTINATION ${BIN_INSTALL_DIR}
+         ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install (PROGRAMS personviewer.desktop
