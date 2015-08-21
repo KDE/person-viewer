@@ -113,7 +113,7 @@ void MainWindow::prepareMergeListView(const bool multipleSelection)
 
     //collect selected uris
     Q_FOREACH (const QModelIndex &index, indexes) {
-        selectedUris << index.data(PersonsModel::PersonIdRole).toString();
+        selectedUris << index.data(PersonsModel::PersonUriRole).toString();
     }
 
     //delete widgets not present among the selected uris
@@ -147,7 +147,7 @@ void MainWindow::onMergeButtonPressed()
 {
     QStringList uris;
     Q_FOREACH (const QModelIndex &index, m_personsView->selectionModel()->selectedIndexes()) {
-        uris << index.data(PersonsModel::PersonIdRole).toString();
+        uris << index.data(PersonsModel::PersonUriRole).toString();
     }
 
     KPeople::mergeContacts(uris);
